@@ -1,9 +1,10 @@
-import Head from 'next/head'
-import { Inter } from 'next/font/google'
-import TextArea from '@/components/playground/TextArea'
-import PlaygroundMessages from '@/components/playground/PlaygroundMessages'
+import Head from "next/head";
+import { Inter } from "next/font/google";
+import TextArea from "@/components/input/TextArea";
+import PlaygroundMessages from "@/components/playground/PlaygroundMessages";
+import ConfigSidebar from "@/components/playground/ConfigSidebar";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
@@ -14,12 +15,17 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="w-screen h-screen">
-        <div className="flex flex-row items-stretch h-full">
-          <TextArea title="System" className="min-w-[300px]" placeholder="You are a helpful assistant." />
+      <main className="max-w-screen max-h-screen h-screen w-screen flex flex-row">
+        <div className="flex flex-row items-stretch h-full grow">
+          <TextArea
+            title="System"
+            className="min-w-[300px]"
+            placeholder="You are a helpful assistant."
+          />
           <PlaygroundMessages />
         </div>
+        <ConfigSidebar />
       </main>
     </>
-  )
+  );
 }

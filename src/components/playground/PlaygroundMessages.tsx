@@ -30,7 +30,7 @@ export default function PlaygroundMessages({}: Props) {
       </div>
 
       <div className="mx-4">
-        <button className="bg-blue-600 text-white m-4 p-2 rounded">
+        <button className="bg-blue-500 text-white m-4 p-2 rounded">
           Submit
         </button>
       </div>

@@ -58,7 +58,7 @@ export default function PlaygroundMessage({
       </div>
       <div className="basis-8/12">
         <input
-          className="w-full bg-transparent text-gray-700 p-4 focus:outline-none rounded text-lg focus:ring-1 focus:ring-blue-600 focus:border-transparent"
+          className="w-full bg-transparent text-gray-700 p-4 focus:outline-none rounded text-lg focus:ring-1 focus:ring-blue-600 focus:bg-white focus:border-transparent"
           type="text"
           value={content}
           onChange={handleContentChange}
