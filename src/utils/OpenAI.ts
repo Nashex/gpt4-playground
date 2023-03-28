@@ -1,17 +1,21 @@
-interface OpenAIChatMessage {
+export interface OpenAIChatMessage {
+  id?: number;
   role: "system" | "assistant" | "user";
   content: string;
 }
 
-export interface OpenAIRequest {
+export interface OpenAIConfig {
   model: string;
   temperature?: number;
   max_tokens?: number;
   top_p?: number;
   frequency_penalty?: number;
   presence_penalty?: number;
-  messages: OpenAIChatMessage[];
 }
+
+export type OpenAIRequest = {
+  messages: OpenAIChatMessage[];
+} & OpenAIConfig;
 
 export const getOpenAICompletion = async (payload: OpenAIRequest) => {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
