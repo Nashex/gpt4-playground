@@ -25,7 +25,7 @@ export default async function handler(
   const systemMessage = "You are a helpful chatbot."
 
   const config = {
-    max_tokens: 8192 - systemMessage.length - prompt.length,
+    max_tokens: 8192 - systemMessage.length,
     temperature: 0.5,
     top_p: 1,
     frequency_penalty: 0,
