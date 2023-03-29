@@ -34,7 +34,7 @@ export default function ChatMessages({}: Props) {
   return (
     <div className="relative h-full w-full md:pl-[260px] flex flex-col items-stretch">
       <div
-        className="flex flex-col flex-1 pb-[10rem] bg-tertiary border-b  overflow-auto"
+        className="flex flex-col flex-1 pb-[10rem] bg-tertiary border-b overflow-auto"
         ref={messageContainer}
       >
         {messages.map((message) => (

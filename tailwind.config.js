@@ -26,9 +26,17 @@ module.exports = {
       backgroundColor,
       colors: {
         primary: generateColorClass('primary'),
+        bg: {
+          ...backgroundColor
+        },
+        text: {
+          ...textColor
+        },
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar', { nocompatible: true }),
+  ],
 }
 

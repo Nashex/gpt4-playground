@@ -1,15 +1,27 @@
 import ChatMessages from "@/components/chat/ChatMessages";
 import ChatSidebar from "@/components/chat/ChatSidebar";
 import Head from "next/head";
-import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+import React from "react";
+import { getConversation } from "./../../utils/History";
 import { useOpenAI } from "@/context/OpenAIProvider";
 
 export default function Chat() {
-  const { clearConversation } = useOpenAI();
+  const { loadConversation, conversationId } = useOpenAI();
+  const { id } = useRouter().query;
 
-  useEffect(() => {
-    clearConversation();
-  }, []);
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const conversation = getConversation(id as string);
+      if (!conversation) {
+        window.location.href = "/chat";
+      } else if (conversationId !== id) {
+        loadConversation(id as string, conversation);
+      }
+
+
+    }
+  }, [id]);
 
   return (
     <React.Fragment>

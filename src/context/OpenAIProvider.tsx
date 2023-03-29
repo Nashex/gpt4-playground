@@ -1,6 +1,7 @@
+import { clearHistory, getHistory, storeConversation } from "@/utils/History";
 import { defaultConfig, OpenAIChatMessage, OpenAIConfig } from "@/utils/OpenAI";
-import React, { PropsWithChildren, useCallback } from "react";
-import { flushSync } from "react-dom";
+import React, { PropsWithChildren, useCallback, useEffect } from "react";
+import { useRouter } from "next/router";
 
 type Props = {};
 
@@ -14,6 +15,11 @@ const defaultContext = {
   updateSystemMessage: (content: string) => {},
   addMessage: () => {},
   removeMessage: (id: number) => {},
+  conversationId: "",
+  conversations: {} as Record<string, OpenAIChatMessage[]>,
+  clearConversations: () => {},
+  clearConversation: () => {},
+  loadConversation: (id: string, messages: OpenAIChatMessage[]) => {},
   toggleMessageRole: (id: number) => {},
   updateMessageContent: (id: number, content: string) => {},
   updateConfig: (newConfig: Partial<OpenAIConfig>) => {},
@@ -28,6 +34,11 @@ const OpenAIContext = React.createContext<{
   updateSystemMessage: (content: string) => void;
   addMessage: (content?: string, submit?: boolean) => void;
   removeMessage: (id: number) => void;
+  conversationId: string;
+  conversations: Record<string, OpenAIChatMessage[]>;
+  clearConversation: () => void;
+  clearConversations: () => void;
+  loadConversation: (id: string, messages: OpenAIChatMessage[]) => void;
   toggleMessageRole: (id: number) => void;
   updateMessageContent: (id: number, content: string) => void;
   updateConfig: (newConfig: Partial<OpenAIConfig>) => void;
@@ -36,12 +47,22 @@ const OpenAIContext = React.createContext<{
 }>(defaultContext);
 
 export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
+  const router = useRouter();
   const [loading, setLoading] = React.useState(false);
   const [systemMessage, setSystemMessage] = React.useState<
     { role: "system" } & OpenAIChatMessage
   >(defaultContext.systemMessage);
   const [messages, setMessages] = React.useState<OpenAIChatMessage[]>([]);
   const [config, setConfig] = React.useState<OpenAIConfig>(defaultConfig);
+  const [conversations, setConversations] = React.useState<
+    Record<string, OpenAIChatMessage[]>
+  >({});
+  const [conversationId, setConversationId] = React.useState<string>("");
+
+  // Load conversation from local storage
+  useEffect(() => {
+    setConversations(getHistory() || {});
+  }, []);
 
   const updateSystemMessage = (content: string) => {
     setSystemMessage({
@@ -95,6 +116,42 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
     });
   };
 
+  const handleStoreConversation = useCallback(
+    (messages: OpenAIChatMessage[]) => {
+      if (messages.length === 0) return;
+
+      let id = storeConversation(conversationId, messages);
+      setConversationId(id);
+      setConversations((prev) => ({ ...prev, [id]: messages }));
+
+      router.push(`/chat/${id}`);
+    },
+    [conversationId, messages]
+  );
+
+  useEffect(() => {
+    handleStoreConversation(messages);
+  }, [messages]);
+
+  const loadConversation = (id: string, messages: OpenAIChatMessage[]) => {
+    setConversationId(id);
+    setMessages(messages);
+  };
+
+  const clearConversations = () => {
+    clearHistory();
+    setMessages([]);
+    setConversationId("");
+    setConversations({});
+
+    router.push("/");
+  };
+
+  const clearConversation = () => {
+    setMessages([]);
+    setConversationId("");
+  };
+
   const submit = useCallback(
     async (messages_: OpenAIChatMessage[] = []) => {
       if (loading) return;
@@ -146,6 +203,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
           updateMessageContent(message.id as number, message.content);
         }
       } catch (error) {}
+
       setLoading(false);
     },
     [config, messages, systemMessage, loading]
@@ -183,12 +241,26 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
       updateSystemMessage,
       addMessage,
       removeMessage,
+      conversationId,
+      loadConversation,
+      clearConversation,
+      clearConversations,
+      conversations,
       toggleMessageRole,
       updateMessageContent,
       updateConfig,
       submit,
     }),
-    [systemMessage, messages, config, loading, addMessage, submit]
+    [
+      systemMessage,
+      messages,
+      config,
+      loading,
+      addMessage,
+      submit,
+      conversationId,
+      conversations,
+    ]
   );
 
   return (

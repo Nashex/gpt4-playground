@@ -5,7 +5,7 @@ import { MdSend } from "react-icons/md";
 type Props = {};
 
 export default function ChatInput({}: Props) {
-  const { addMessage, loading, messages } = useOpenAI();
+  const { addMessage, loading } = useOpenAI();
 
   const [input, setInput] = React.useState("");
 
@@ -21,9 +21,9 @@ export default function ChatInput({}: Props) {
   };
 
   return (
-    <div className="fixed bottom-0 flex w-[calc(100%-260px)] h-40 bg-gradient-to-t from-[rgb(var(--bg-secondary))] to-transparent">
+    <div className="fixed bottom-0 flex w-full md:w-[calc(100%-260px)] h-40 bg-gradient-to-t from-[rgb(var(--bg-secondary))] to-transparent">
       <form
-        className="w-full h-full flex items-center justify-center mx-auto max-w-4xl"
+        className="w-full h-full flex items-center justify-center mx-auto max-w-4xl p-4"
         onSubmit={handleSubmit}
       >
         <div className="bg-tertiary flex flex-row w-full shadow-xl overflow-clip rounded border border-stone-500/20">
