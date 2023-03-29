@@ -6,6 +6,7 @@ import {
   MdColorLens,
   MdChatBubbleOutline,
   MdToken,
+  MdBuild,
 } from "react-icons/md";
 import { useOpenAI } from "@/context/OpenAIProvider";
 import { useAuth } from "@/context/AuthProvider";
@@ -68,6 +69,13 @@ export default function ChatSidebar({}: Props) {
               <div className="absolute bottom-0 right-0 z-10 h-full w-24  bg-gradient-to-l from-[rgb(var(--bg-primary))] to-transparent" />
             </span>
           </div>
+          <Link
+            className="flex items-center gap-3 rounded p-4 transition-colors hover:bg-gray-500/10"
+            href="/playground"
+          >
+            <MdBuild />
+            Playground
+          </Link>
           <button
             className="flex items-center gap-3 rounded p-4 transition-colors hover:bg-gray-500/10"
             onClick={clearToken}
