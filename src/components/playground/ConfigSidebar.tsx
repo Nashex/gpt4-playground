@@ -39,7 +39,7 @@ export default function ConfigSidebar({  }: Props) {
       />
       <Slider
         label="maximum length"
-        range={[ 0, 8192 ]}
+        range={[ 0, 32768 ]}
         step={1}
         value={config.max_tokens as number}
         onChange={(value: OpenAIConfig["max_tokens"]) =>

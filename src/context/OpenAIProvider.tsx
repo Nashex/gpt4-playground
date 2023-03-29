@@ -2,8 +2,9 @@ import { clearHistory, getHistory, storeConversation } from "@/utils/History";
 import { defaultConfig, OpenAIChatMessage, OpenAIConfig } from "@/utils/OpenAI";
 import React, { PropsWithChildren, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useAuth } from "@/context/AuthProvider";
 
-type Props = {};
+const CHAT_ROUTE = "/";
 
 const defaultContext = {
   systemMessage: {
@@ -25,6 +26,7 @@ const defaultContext = {
   updateConfig: (newConfig: Partial<OpenAIConfig>) => {},
   submit: () => {},
   loading: false,
+  error: "",
 };
 
 const OpenAIContext = React.createContext<{
@@ -44,11 +46,14 @@ const OpenAIContext = React.createContext<{
   updateConfig: (newConfig: Partial<OpenAIConfig>) => void;
   submit: () => void;
   loading: boolean;
+  error: string;
 }>(defaultContext);
 
-export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
+export default function OpenAIProvider({ children }: PropsWithChildren) {
+  const { token } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
   const [systemMessage, setSystemMessage] = React.useState<
     { role: "system" } & OpenAIChatMessage
   >(defaultContext.systemMessage);
@@ -124,7 +129,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
       setConversationId(id);
       setConversations((prev) => ({ ...prev, [id]: messages }));
 
-      router.push(`/chat/${id}`);
+      if (router.pathname === CHAT_ROUTE) router.push(`/chat/${id}`);
     },
     [conversationId, messages]
   );
@@ -138,14 +143,14 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
     setMessages(messages);
   };
 
-  const clearConversations = () => {
+  const clearConversations = useCallback(() => {
     clearHistory();
     setMessages([]);
     setConversationId("");
     setConversations({});
 
     router.push("/");
-  };
+  }, []);
 
   const clearConversation = () => {
     setMessages([]);
@@ -160,10 +165,12 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
       messages_ = messages_.length ? messages_ : messages;
 
       try {
+        const decoder = new TextDecoder();
         const { body, ok } = await fetch("/api/completion", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             ...config,
@@ -176,11 +183,14 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
           }),
         });
 
-        if (!ok) throw new Error("Failed to fetch");
         if (!body) return;
+        if (!ok)
+          throw new Error(
+            "Failed to fetch completion. Please check your API key and try again."
+          );
 
         const reader = body.getReader();
-        const decoder = new TextDecoder();
+
         let done = false;
 
         const message = {
@@ -202,11 +212,22 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
 
           updateMessageContent(message.id as number, message.content);
         }
-      } catch (error) {}
+      } catch (error: any) {
+        setMessages((prev) => {
+          return [
+            ...prev,
+            {
+              id: prev.length,
+              role: "assistant",
+              content: error.message,
+            },
+          ];
+        });
+      }
 
       setLoading(false);
     },
-    [config, messages, systemMessage, loading]
+    [config, messages, systemMessage, loading, token]
   );
 
   const addMessage = useCallback(
@@ -250,6 +271,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
       updateMessageContent,
       updateConfig,
       submit,
+      error,
     }),
     [
       systemMessage,
@@ -260,6 +282,8 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
       submit,
       conversationId,
       conversations,
+      error,
+      clearConversations,
     ]
   );
 

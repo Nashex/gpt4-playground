@@ -2,10 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { defaultConfig, getOpenAICompletion } from '@/utils/OpenAI';
 import { OpenAIRequest } from '@/utils/OpenAI';
 
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error("Missing OPENAI_API_KEY env var");
-}
-
 export const config = {
   runtime: "edge",
 };
@@ -25,6 +21,11 @@ export default async function handler(
     return new Response("Missing messages", { status: 400 });
   }
 
+  const token = req.headers.get("Authorization")?.split(" ")[1];
+  if (!token) {
+    return new Response("Missing token", { status: 401 });
+  }
+
   const config = {
     max_tokens: max_tokens || defaultConfig.max_tokens,
     temperature: temperature || defaultConfig.temperature,
@@ -41,6 +42,6 @@ export default async function handler(
     messages,
   }
 
-  const stream = await getOpenAICompletion(payload);
+  const stream = await getOpenAICompletion(token, payload);
   return new Response(stream);
 }

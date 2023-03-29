@@ -5,21 +5,21 @@ import { useRouter } from "next/router";
 import React from "react";
 import { getConversation } from "./../../utils/History";
 import { useOpenAI } from "@/context/OpenAIProvider";
+import ChatHeader from "./../../components/chat/ChatHeader";
 
 export default function Chat() {
   const { loadConversation, conversationId } = useOpenAI();
   const { id } = useRouter().query;
 
   React.useEffect(() => {
+    if (!id) return;
     if (typeof window !== "undefined") {
       const conversation = getConversation(id as string);
       if (!conversation) {
-        window.location.href = "/chat";
+        window.location.href = "/";
       } else if (conversationId !== id) {
         loadConversation(id as string, conversation);
       }
-
-
     }
   }, [id]);
 
@@ -32,6 +32,7 @@ export default function Chat() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="relative max-h-screen max-w-screen h-screen w-screen overflow-hidden">
+        <ChatHeader />
         <ChatMessages />
         <ChatSidebar />
       </div>

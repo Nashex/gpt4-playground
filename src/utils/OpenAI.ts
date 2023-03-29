@@ -28,13 +28,13 @@ export type OpenAIRequest = {
   messages: OpenAIChatMessage[];
 } & OpenAIConfig;
 
-export const getOpenAICompletion = async (payload: OpenAIRequest) => {
+export const getOpenAICompletion = async (token: string, payload: OpenAIRequest) => {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     headers: {
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     method: "POST",

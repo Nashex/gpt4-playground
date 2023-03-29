@@ -33,7 +33,7 @@ export default function Slider({ label, range, step, value, onChange }: Props) {
           {label.toUpperCase()}
         </div>
         <input
-          className="text-md text-right px-1 w-12 text-gray-700 focus:outline focus:outline-blue-500 rounded"
+          className="text-md text-right px-1 w-14 text-gray-700 focus:outline focus:outline-blue-500 rounded"
           type="text"
           value={value}
           onChange={handleChange}

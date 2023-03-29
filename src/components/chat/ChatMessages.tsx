@@ -2,6 +2,7 @@ import { useOpenAI } from "@/context/OpenAIProvider";
 import React, { useEffect } from "react";
 import ChatInput from "./ChatInput";
 import ChatMessage from "./ChatMessage";
+import ChatPlaceholder from "./ChatPlaceholder";
 
 type Props = {};
 
@@ -32,15 +33,21 @@ export default function ChatMessages({}: Props) {
   }, [submit]);
 
   return (
-    <div className="relative h-full w-full md:pl-[260px] flex flex-col items-stretch">
+    <div className="h-full w-full md:pl-[260px] flex flex-col items-stretch">
       <div
-        className="flex flex-col flex-1 pb-[10rem] bg-tertiary border-b overflow-auto"
+        className="relative flex flex-col flex-1 pb-[10rem] bg-tertiary border-b overflow-auto"
         ref={messageContainer}
       >
-        {messages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
-        ))}
-        <hr className="border-b border-stone-400/20" />
+        {messages.length === 0 ? (
+          <ChatPlaceholder />
+        ) : (
+          <>
+            {messages.map((message) => (
+              <ChatMessage key={message.id} message={message} />
+            ))}
+            <hr className="border-b border-stone-400/20" />
+          </>
+        )}
       </div>
       <ChatInput />
     </div>

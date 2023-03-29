@@ -10,7 +10,7 @@ export default function AddMessage({}: Props) {
   return (
     <button
       className="flex flex-row p-4 gap-x-4 text-gray-700 hover:bg-gray-100 cursor-pointer"
-      onClick={() => addMessage()}
+      onClick={() => addMessage("", false)}
     >
       <MdAddCircleOutline size={24} />
       <span className="font-medium">Add Message</span>

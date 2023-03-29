@@ -1,18 +1,20 @@
-import { clearHistory, getHistory } from "@/utils/History";
 import Link from "next/link";
 import React from "react";
 import {
   MdAdd,
-  MdLogout,
   MdDeleteOutline,
   MdColorLens,
   MdChatBubbleOutline,
+  MdToken,
 } from "react-icons/md";
 import { useOpenAI } from "@/context/OpenAIProvider";
+import { useAuth } from "@/context/AuthProvider";
+import Github from "../misc/Github";
 
 type Props = {};
 
 export default function ChatSidebar({}: Props) {
+  const { token, clearToken } = useAuth();
   const { conversations, clearConversations } = useOpenAI();
 
   const handleThemeChange = () => {
@@ -23,11 +25,11 @@ export default function ChatSidebar({}: Props) {
   const [dark, setDark] = React.useState(false);
 
   return (
-    <div className="dark text-primary hidden h-full max-h-screen md:fixed md:flex flex-col bg-stone-900 md:w-[260px] top-0 left-0">
+    <div className="dark text-primary h-full max-h-screen md:fixed md:flex flex-col bg-gray-900 md:w-[260px] top-0 left-0">
       <div className="flex h-full flex-col p-2 items-stretch">
         <Link
-          href="/chat"
-          className="flex gap-3 items-center p-4 border hover:bg-stone-500/10 rounded border-white/20 transition-colors"
+          href="/"
+          className="flex gap-3 items-center p-4 border hover:bg-gray-500/10 rounded border-white/20 transition-colors"
         >
           <MdAdd />
           New chat
@@ -38,7 +40,7 @@ export default function ChatSidebar({}: Props) {
               <Link
                 key={key}
                 href={`/chat/${key}`}
-                className="relative flex gap-3 items-center p-4 hover:bg-stone-500/10 rounded transition-colors truncate"
+                className="relative flex gap-3 items-center p-4 hover:bg-gray-500/10 rounded transition-colors truncate"
               >
                 <span>
                   <MdChatBubbleOutline />
@@ -50,26 +52,39 @@ export default function ChatSidebar({}: Props) {
           </div>
         </div>
 
-        <div className="flex flex-col border-t border-white/10 py-2">
+        <div className="flex flex-col border-y border-white/10 py-2 gap-y-2">
+          <div className="p-4 border-b pb-6 border-white/10">
+            <h3 className="text-sm font-medium mb-2">YOUR API KEY</h3>
+            <span className="relative flex gap-3 text-primary/80 items-center transition-colors whitespace-nowrap text-ellipsis overflow-hidden">
+              {token || "No api key set"}
+              <div className="absolute h-full bg-gradient-to-l from-[rgb(var(--bg-primary))] to-transparent z-10  w-24 right-0 bottom-0" />
+            </span>
+          </div>
           <button
-            className="flex gap-3 items-center p-4 hover:bg-stone-500/10 rounded transition-colors"
+            className="flex gap-3 items-center p-4 hover:bg-gray-500/10 rounded transition-colors"
+            onClick={clearToken}
+          >
+            <MdToken />
+            Clear Api Key
+          </button>
+          <button
+            className="flex gap-3 items-center p-4 hover:bg-gray-500/10 rounded transition-colors"
             onClick={clearConversations}
           >
             <MdDeleteOutline />
             Clear Conversations
           </button>
           <button
-            className="flex gap-3 items-center p-4 hover:bg-stone-500/10 rounded transition-colors"
+            className="flex gap-3 items-center p-4 hover:bg-gray-500/10 rounded transition-colors"
             onClick={handleThemeChange}
           >
             <MdColorLens />
             {dark ? "Light" : "Dark"} mode
           </button>
-          <button className="flex gap-3 items-center p-4 hover:bg-sky-500/10 rounded transition-colors">
-            <MdLogout />
-            Log out
-          </button>
         </div>
+
+        <Github />
+        <span className="text-center text-primary/80">Made with ❤️ by Nashex</span>
       </div>
     </div>
   );

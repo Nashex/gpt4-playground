@@ -26,7 +26,7 @@ export default function ChatInput({}: Props) {
         className="w-full h-full flex items-center justify-center mx-auto max-w-4xl p-4"
         onSubmit={handleSubmit}
       >
-        <div className="bg-tertiary flex flex-row w-full shadow-xl overflow-clip rounded border border-stone-500/20">
+        <div className="relative bg-tertiary flex flex-row w-full shadow-xl rounded border border-stone-500/20">
           <input
             type="text"
             className="bg-tertiary border-none outline-none p-4 w-full text-primary"
