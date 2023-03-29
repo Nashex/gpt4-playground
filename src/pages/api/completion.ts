@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getOpenAICompletion } from '@/utils/OpenAI';
+import { defaultConfig, getOpenAICompletion } from '@/utils/OpenAI';
 import { OpenAIRequest } from '@/utils/OpenAI';
 
 if (!process.env.OPENAI_API_KEY) {
@@ -15,36 +15,24 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Response>
 ) {
-  const { prompt } = req.body;
+  const { max_tokens, temperature, top_p, frequency_penalty, presence_penalty, messages } = req.body;
 
-  if (!prompt) {
-    return res.status(400).json({ error: "Missing prompt" });
+  if (!messages) {
+    return res.status(400).json({ error: "Missing messages" });
   }
 
-  // Todo make this a parameter
-  const systemMessage = "You are a helpful chatbot."
-
   const config = {
-    max_tokens: 8192 - systemMessage.length,
-    temperature: 0.5,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
+    max_tokens: max_tokens || defaultConfig.max_tokens,
+    temperature: temperature || defaultConfig.temperature,
+    top_p: top_p || defaultConfig.top_p,
+    frequency_penalty: frequency_penalty || defaultConfig.frequency_penalty,
+    presence_penalty: presence_penalty || defaultConfig.presence_penalty,
   }
 
   const payload: OpenAIRequest = {
     model: "gpt-4",
     ...config,
-    messages: [
-      {
-        role: "system",
-        content: systemMessage
-      },
-      {
-        role: "user",
-        content: prompt
-      }
-    ]
+    messages,
   }
 
   try {

@@ -13,6 +13,15 @@ export interface OpenAIConfig {
   presence_penalty?: number;
 }
 
+export const defaultConfig = {
+  model: "gpt-4",
+  temperature: 0.5,
+  max_tokens: 256,
+  top_p: 1,
+  frequency_penalty: 0,
+  presence_penalty: .6,
+}
+
 export type OpenAIRequest = {
   messages: OpenAIChatMessage[];
 } & OpenAIConfig;
