@@ -1,5 +1,6 @@
 import { defaultConfig, OpenAIChatMessage, OpenAIConfig } from "@/utils/OpenAI";
 import React, { PropsWithChildren, useCallback } from "react";
+import { flushSync } from "react-dom";
 
 type Props = {};
 
@@ -9,7 +10,7 @@ const defaultContext = {
     content: "You are a helpful AI chatbot.",
   } as { role: "system" } & OpenAIChatMessage,
   messages: [] as OpenAIChatMessage[],
-  config: {} as OpenAIConfig,
+  config: defaultConfig as OpenAIConfig,
   updateSystemMessage: (content: string) => {},
   addMessage: () => {},
   removeMessage: (id: number) => {},
@@ -25,7 +26,7 @@ const OpenAIContext = React.createContext<{
   messages: OpenAIChatMessage[];
   config: OpenAIConfig;
   updateSystemMessage: (content: string) => void;
-  addMessage: () => void;
+  addMessage: (content?: string, submit?: boolean) => void;
   removeMessage: (id: number) => void;
   toggleMessageRole: (id: number) => void;
   updateMessageContent: (id: number, content: string) => void;
@@ -35,18 +36,12 @@ const OpenAIContext = React.createContext<{
 }>(defaultContext);
 
 export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
-  const [ loading, setLoading ] = React.useState(false);
-  const [ systemMessage, setSystemMessage ] = React.useState<
+  const [loading, setLoading] = React.useState(false);
+  const [systemMessage, setSystemMessage] = React.useState<
     { role: "system" } & OpenAIChatMessage
   >(defaultContext.systemMessage);
-  const [ messages, setMessages ] = React.useState<OpenAIChatMessage[]>([
-    {
-      id: 0,
-      role: "user",
-      content: "",
-    },
-  ]);
-  const [ config, setConfig ] = React.useState<OpenAIConfig>(defaultConfig);
+  const [messages, setMessages] = React.useState<OpenAIChatMessage[]>([]);
+  const [config, setConfig] = React.useState<OpenAIConfig>(defaultConfig);
 
   const updateSystemMessage = (content: string) => {
     setSystemMessage({
@@ -55,23 +50,9 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
     });
   };
 
-  const addMessage = () => {
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: prev.length,
-        role:
-          prev.length > 0
-            ? prev[prev.length - 1].role === "user" ? "assistant" : "user"
-            : "user",
-        content: "",
-      },
-    ]);
-  };
-
   const removeMessage = (id: number) => {
     setMessages((prev) => {
-      return [ ...prev.filter((message) => message.id !== id) ];
+      return [...prev.filter((message) => message.id !== id)];
     });
   };
 
@@ -115,9 +96,12 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
   };
 
   const submit = useCallback(
-    async () => {
+    async (messages_: OpenAIChatMessage[] = []) => {
       if (loading) return;
       setLoading(true);
+
+      messages_ = messages_.length ? messages_ : messages;
+
       try {
         const { body, ok } = await fetch("/api/completion", {
           method: "POST",
@@ -126,10 +110,12 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
           },
           body: JSON.stringify({
             ...config,
-            messages: [
-              systemMessage,
-              ...messages,
-            ].map(({ role, content }) => ({ role, content })),
+            messages: [systemMessage, ...messages_].map(
+              ({ role, content }) => ({
+                role,
+                content,
+              })
+            ),
           }),
         });
 
@@ -141,15 +127,15 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
         let done = false;
 
         const message = {
-          id: messages.length,
+          id: messages_.length,
           role: "assistant",
           content: "",
         } as OpenAIChatMessage;
 
-        setMessages((prev) => [
-          ...prev,
-          message,
-        ]);
+        setMessages((prev) => {
+          message.id = prev.length;
+          return [...prev, message];
+        });
 
         while (!done) {
           const { value, done: doneReading } = await reader.read();
@@ -162,7 +148,30 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
       } catch (error) {}
       setLoading(false);
     },
-    [ config, messages, systemMessage, loading ]
+    [config, messages, systemMessage, loading]
+  );
+
+  const addMessage = useCallback(
+    (content: string = "", submit_: boolean = false) => {
+      setMessages((prev) => {
+        const messages = [
+          ...prev,
+          {
+            id: prev.length,
+            role:
+              prev.length > 0
+                ? prev[prev.length - 1].role === "user"
+                  ? "assistant"
+                  : "user"
+                : "user",
+            content: content || "",
+          } as OpenAIChatMessage,
+        ];
+        submit_ && submit(messages);
+        return messages;
+      });
+    },
+    [submit]
   );
 
   const value = React.useMemo(
@@ -179,7 +188,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
       updateConfig,
       submit,
     }),
-    [ systemMessage, messages, config, loading, submit ]
+    [systemMessage, messages, config, loading, addMessage, submit]
   );
 
   return (

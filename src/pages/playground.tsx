@@ -2,10 +2,10 @@ import Head from "next/head";
 import React from "react";
 import PlaygroundMessages from "@/components/playground/PlaygroundMessages";
 import ConfigSidebar from "@/components/playground/ConfigSidebar";
-import Header from "@/components/shell/Header";
+import PlaygroundHeader from "@/components/playground/PlaygroundHeader";
 import SystemMessage from "@/components/playground/SystemMessage";
 
-export default function Home() {
+export default function Playground() {
   return (
     <React.Fragment>
       <Head>
@@ -15,7 +15,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-col max-h-screen max-w-screen w-screen">
-        <Header />
+        <PlaygroundHeader />
         <div className="flex flex-row grow max-h-[calc(100vh-60px)] h-[calc(100vh-60px)]">
           <div className="flex flex-col md:flex-row items-stretch grow">
             <SystemMessage />
