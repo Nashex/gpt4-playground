@@ -1,12 +1,9 @@
 import Head from "next/head";
 import React from "react";
-import { Inter } from "next/font/google";
-import TextArea from "@/components/input/TextArea";
 import PlaygroundMessages from "@/components/playground/PlaygroundMessages";
 import ConfigSidebar from "@/components/playground/ConfigSidebar";
 import Header from "@/components/shell/Header";
-
-const inter = Inter({ subsets: [ "latin" ] });
+import SystemMessage from "@/components/playground/SystemMessage";
 
 export default function Home() {
   return (
@@ -21,11 +18,7 @@ export default function Home() {
         <Header />
         <div className="flex flex-row grow max-h-[calc(100vh-60px)] h-[calc(100vh-60px)] max-w-screen w-screen">
           <div className="flex flex-row items-stretch h-full grow">
-            <TextArea
-              title="System"
-              className="basis-4/12"
-              placeholder="You are a helpful assistant."
-            />
+            <SystemMessage />
             <PlaygroundMessages />
           </div>
           <ConfigSidebar />
