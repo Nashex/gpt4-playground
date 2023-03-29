@@ -119,7 +119,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
       if (loading) return;
       setLoading(true);
       try {
-        const { content } = await fetch("/api/completion", {
+        const { body, ok } = await fetch("/api/completion", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -131,17 +131,34 @@ export default function OpenAIProvider({ children }: PropsWithChildren<Props>) {
               ...messages,
             ].map(({ role, content }) => ({ role, content })),
           }),
-        }).then((res) => res.json());
+        });
 
-        // Add the result to the messages
+        if (!ok) throw new Error("Failed to fetch");
+        if (!body) return;
+
+        const reader = body.getReader();
+        const decoder = new TextDecoder();
+        let done = false;
+
+        const message = {
+          id: messages.length,
+          role: "assistant",
+          content: "",
+        } as OpenAIChatMessage;
+
         setMessages((prev) => [
           ...prev,
-          {
-            id: prev.length,
-            role: "assistant",
-            content,
-          },
+          message,
         ]);
+
+        while (!done) {
+          const { value, done: doneReading } = await reader.read();
+          done = doneReading;
+          const chunkValue = decoder.decode(value);
+          message.content += chunkValue;
+
+          updateMessageContent(message.id as number, message.content);
+        }
       } catch (error) {}
       setLoading(false);
     },

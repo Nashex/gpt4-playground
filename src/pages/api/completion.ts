@@ -6,19 +6,23 @@ if (!process.env.OPENAI_API_KEY) {
   throw new Error("Missing OPENAI_API_KEY env var");
 }
 
+export const config = {
+  runtime: "edge",
+};
+
 interface Response {
   content?: string;
   error?: string;
 }
 
 export default async function handler(
-  req: NextApiRequest,
+  req: Request,
   res: NextApiResponse<Response>
 ) {
-  const { max_tokens, temperature, top_p, frequency_penalty, presence_penalty, messages } = req.body;
+  const { max_tokens, temperature, top_p, frequency_penalty, presence_penalty, messages } = await req.json();
 
   if (!messages) {
-    return res.status(400).json({ error: "Missing messages" });
+    return new Response("Missing messages", { status: 400 });
   }
 
   const config = {
@@ -27,6 +31,8 @@ export default async function handler(
     top_p: top_p || defaultConfig.top_p,
     frequency_penalty: frequency_penalty || defaultConfig.frequency_penalty,
     presence_penalty: presence_penalty || defaultConfig.presence_penalty,
+    stream: true,
+    n: 1,
   }
 
   const payload: OpenAIRequest = {
@@ -35,11 +41,6 @@ export default async function handler(
     messages,
   }
 
-  try {
-    const result = await getOpenAICompletion(payload);
-    return res.status(200).json({ content: result });
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message });
-  }
-
+  const stream = await getOpenAICompletion(payload);
+  return new Response(stream);
 }
