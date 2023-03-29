@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { defaultConfig, getOpenAICompletion } from '@/utils/OpenAI';
-import { OpenAIRequest } from '@/utils/OpenAI';
+import type { NextApiRequest, NextApiResponse } from "next";
+import { defaultConfig, getOpenAICompletion } from "@/utils/OpenAI";
+import { OpenAIRequest } from "@/utils/OpenAI";
 
 export const config = {
   runtime: "edge",
@@ -15,7 +15,14 @@ export default async function handler(
   req: Request,
   res: NextApiResponse<Response>
 ) {
-  const { max_tokens, temperature, top_p, frequency_penalty, presence_penalty, messages } = await req.json();
+  const {
+    max_tokens,
+    temperature,
+    top_p,
+    frequency_penalty,
+    presence_penalty,
+    messages,
+  } = await req.json();
 
   if (!messages) {
     return new Response("Missing messages", { status: 400 });
@@ -34,13 +41,13 @@ export default async function handler(
     presence_penalty: presence_penalty || defaultConfig.presence_penalty,
     stream: true,
     n: 1,
-  }
+  };
 
   const payload: OpenAIRequest = {
     model: "gpt-4",
     ...config,
     messages,
-  }
+  };
 
   const stream = await getOpenAICompletion(token, payload);
   return new Response(stream);

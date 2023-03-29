@@ -12,31 +12,31 @@ export default function ChatMessage({ message: { id, role, content } }: Props) {
 
   return (
     <div
-      className={`flex cursor-pointer flex-row p-4 items-center transition-all ${
+      className={`flex cursor-pointer flex-row items-center p-4 transition-all ${
         role === "user" ? "bg-tertiary hover:bg-secondary/50" : "bg-secondary"
       }`}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <div className="flex flex-row items-center w-full max-w-4xl mx-auto">
+      <div className="mx-auto flex w-full max-w-4xl flex-row items-center">
         <div
-          className={`h-10 w-10 flex items-center justify-center text-4xl transition-colors ${
+          className={`flex h-10 w-10 items-center justify-center text-4xl transition-colors ${
             hover ? "text-stone-300" : "text-primary/20"
           }`}
         >
           {role === "user" ? <MdPerson /> : <MdSmartToy />}
         </div>
         <div className="basis-10/12 items-center">
-          <p className="w-full resize-none text-primary p-4 focus:outline-none rounded text-md focus:ring-1 focus:ring-blue-600 focus:bg-white focus:border-transparent">
+          <p className="text-md w-full resize-none rounded p-4 text-primary focus:border-transparent focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600">
             {content}
           </p>
         </div>
 
-        <div className="basis-2/12 flex justify-center">
+        <div className="flex basis-2/12 justify-center">
           <button
             className={`focus:outline-none ${
               hover ? "text-stone-300" : "text-transparent"
-            } hover:text-stone-500 transition-all`}
+            } transition-all hover:text-stone-500`}
           >
             {/* <MdEdit size={24} /> */}
           </button>

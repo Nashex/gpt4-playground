@@ -32,9 +32,9 @@ export default function PlaygroundMessages({}: Props) {
   }, [submit]);
 
   return (
-    <div className="md:grow flex flex-col grow justify-between overflow-hidden">
+    <div className="flex grow flex-col justify-between overflow-hidden md:grow">
       <div
-        className="flex flex-col items-stretch m-4 px-4 overflow-y-auto"
+        className="m-4 flex flex-col items-stretch overflow-y-auto px-4"
         ref={messageContainer}
       >
         {messages.map((message) => (
@@ -45,11 +45,11 @@ export default function PlaygroundMessages({}: Props) {
 
       <div className="mx-4 bg-white">
         <button
-          className="bg-green-500 hover:bg-green-600 text-white m-4 p-2 w-[80px] rounded"
+          className="m-4 w-[80px] rounded bg-green-500 p-2 text-white hover:bg-green-600"
           onClick={submit}
         >
           {loading ? (
-            <div className="animate-spin border-b-2 w-5 h-5 rounded-full mx-auto border-white" />
+            <div className="mx-auto h-5 w-5 animate-spin rounded-full border-b-2 border-white" />
           ) : (
             "Submit"
           )}

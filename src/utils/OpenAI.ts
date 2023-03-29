@@ -1,4 +1,8 @@
-import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
+import {
+  createParser,
+  ParsedEvent,
+  ReconnectInterval,
+} from "eventsource-parser";
 
 export interface OpenAIChatMessage {
   id?: number;
@@ -21,14 +25,17 @@ export const defaultConfig = {
   max_tokens: 256,
   top_p: 1,
   frequency_penalty: 0,
-  presence_penalty: .6,
-}
+  presence_penalty: 0.6,
+};
 
 export type OpenAIRequest = {
   messages: OpenAIChatMessage[];
 } & OpenAIConfig;
 
-export const getOpenAICompletion = async (token: string, payload: OpenAIRequest) => {
+export const getOpenAICompletion = async (
+  token: string,
+  payload: OpenAIRequest
+) => {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
@@ -38,7 +45,7 @@ export const getOpenAICompletion = async (token: string, payload: OpenAIRequest)
       "Content-Type": "application/json",
     },
     method: "POST",
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   });
 
   let counter = 0;
@@ -76,4 +83,4 @@ export const getOpenAICompletion = async (token: string, payload: OpenAIRequest)
   });
 
   return stream;
-}
+};

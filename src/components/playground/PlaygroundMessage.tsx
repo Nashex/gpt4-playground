@@ -10,15 +10,12 @@ type Props = {
 export default function PlaygroundMessage({
   message: { id, role, content },
 }: Props) {
-  const [ focus, setFocus ] = React.useState(false);
-  const [ hover, setHover ] = React.useState(false);
+  const [focus, setFocus] = React.useState(false);
+  const [hover, setHover] = React.useState(false);
   const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
-  const {
-    updateMessageContent,
-    removeMessage,
-    toggleMessageRole,
-  } = useOpenAI();
+  const { updateMessageContent, removeMessage, toggleMessageRole } =
+    useOpenAI();
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value === content || id === undefined) return;
@@ -26,21 +23,16 @@ export default function PlaygroundMessage({
     updateMessageContent(id, e.target.value);
     if (textAreaRef.current) {
       textAreaRef.current.style.height = "40px";
-      textAreaRef.current.style.height = `${textAreaRef.current
-        .scrollHeight}px`;
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
     }
   };
 
-  React.useEffect(
-    () => {
-      if (textAreaRef.current) {
-        textAreaRef.current.style.height = "40px";
-        textAreaRef.current.style.height = `${textAreaRef.current
-          .scrollHeight}px`;
-      }
-    },
-    [ content ]
-  );
+  React.useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = "40px";
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+    }
+  }, [content]);
 
   const handleRemove = () => {
     if (id === undefined) return;
@@ -58,8 +50,9 @@ export default function PlaygroundMessage({
 
   return (
     <div
-      className={`flex cursor-pointer flex-row border-b border-gray-300 p-4 items-center transition-all ${highlight &&
-        "bg-gray-100"}`}
+      className={`flex cursor-pointer flex-row items-center border-b border-gray-300 p-4 transition-all ${
+        highlight && "bg-gray-100"
+      }`}
       onFocus={() => setFocus(true)}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -67,8 +60,9 @@ export default function PlaygroundMessage({
     >
       <div className="basis-3/12">
         <button
-          className={`text-sm font-semibold p-2 rounded text-gray-700 transition-all select-none ${highlight &&
-            "bg-gray-300"}`}
+          className={`select-none rounded p-2 text-sm font-semibold text-gray-700 transition-all ${
+            highlight && "bg-gray-300"
+          }`}
           onClick={handleToggleRole}
         >
           {role.toUpperCase()}
@@ -76,7 +70,7 @@ export default function PlaygroundMessage({
       </div>
       <div className="basis-8/12 items-center">
         <textarea
-          className="w-full bg-transparent resize-none text-gray-700 p-4 focus:outline-none rounded text-md focus:ring-1 focus:ring-blue-600 focus:bg-white focus:border-transparent"
+          className="text-md w-full resize-none rounded bg-transparent p-4 text-gray-700 focus:border-transparent focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600"
           value={content}
           onChange={handleContentChange}
           placeholder={`Enter ${role} message here`}
@@ -84,11 +78,11 @@ export default function PlaygroundMessage({
         />
       </div>
 
-      <div className="basis-1/12 flex justify-center">
+      <div className="flex basis-1/12 justify-center">
         <button
-          className={`focus:outline-none ${highlight
-            ? "text-gray-300"
-            : "text-transparent"} hover:text-gray-700 transition-all`}
+          className={`focus:outline-none ${
+            highlight ? "text-gray-300" : "text-transparent"
+          } transition-all hover:text-gray-700`}
           onClick={handleRemove}
         >
           <MdOutlineCancel size={24} />

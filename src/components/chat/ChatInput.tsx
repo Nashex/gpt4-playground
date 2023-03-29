@@ -21,24 +21,24 @@ export default function ChatInput({}: Props) {
   };
 
   return (
-    <div className="fixed bottom-0 flex w-full md:w-[calc(100%-260px)] h-40 bg-gradient-to-t from-[rgb(var(--bg-secondary))] to-transparent">
+    <div className="fixed bottom-0 flex h-40 w-full bg-gradient-to-t from-[rgb(var(--bg-secondary))] to-transparent md:w-[calc(100%-260px)]">
       <form
-        className="w-full h-full flex items-center justify-center mx-auto max-w-4xl p-4"
+        className="mx-auto flex h-full w-full max-w-4xl items-center justify-center p-4"
         onSubmit={handleSubmit}
       >
-        <div className="relative bg-tertiary flex flex-row w-full shadow-xl rounded border border-stone-500/20">
+        <div className="relative flex w-full flex-row rounded border border-stone-500/20 bg-tertiary shadow-xl">
           <input
             type="text"
-            className="bg-tertiary border-none outline-none p-4 w-full text-primary"
+            className="w-full border-none bg-tertiary p-4 text-primary outline-none"
             onChange={handleChange}
             value={input}
           />
           <button
             type="submit"
-            className="p-4 rounded text-primary hover:bg-primary/50"
+            className="rounded p-4 text-primary hover:bg-primary/50"
           >
             {loading ? (
-              <div className="animate-spin border-b-2 w-5 h-5 rounded-full mx-auto border-white" />
+              <div className="mx-auto h-5 w-5 animate-spin rounded-full border-b-2 border-white" />
             ) : (
               <MdSend />
             )}

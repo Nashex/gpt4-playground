@@ -33,9 +33,9 @@ export default function ChatMessages({}: Props) {
   }, [submit]);
 
   return (
-    <div className="h-full w-full md:pl-[260px] flex flex-col items-stretch">
+    <div className="flex h-full w-full flex-col items-stretch md:pl-[260px]">
       <div
-        className="relative flex flex-col flex-1 pb-[10rem] bg-tertiary border-b overflow-auto"
+        className="relative flex flex-1 flex-col overflow-auto border-b bg-tertiary pb-[10rem]"
         ref={messageContainer}
       >
         {messages.length === 0 ? (

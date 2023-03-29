@@ -18,12 +18,12 @@ export default function Dropdown({ label, options, value, onSelect }: Props) {
   };
 
   return (
-    <div className="flex flex-col rounded relative">
+    <div className="relative flex flex-col rounded">
       <label className="text-xs font-medium text-gray-700">
         {label.toUpperCase()}
       </label>
       <button
-        className="mt-2 flex flex-row justify-between items-center text-md p-2 text-gray-700 focus:outline-none border border-gray-300 rounded"
+        className="text-md mt-2 flex flex-row items-center justify-between rounded border border-gray-300 p-2 text-gray-700 focus:outline-none"
         onClick={() => setShow(!show)}
       >
         {value}
@@ -32,16 +32,16 @@ export default function Dropdown({ label, options, value, onSelect }: Props) {
       </button>
 
       {show && (
-        <div className="absolute z-10 border flex flex-col items-stretch min-w-full border-gray-300 py-2 bg-white rounded shadow bottom-0 right-0 translate-y-[calc(100%+10px)]">
-          <span className="text-sm font-medium text-gray-700 py-2 px-4">
+        <div className="absolute bottom-0 right-0 z-10 flex min-w-full translate-y-[calc(100%+10px)] flex-col items-stretch rounded border border-gray-300 bg-white py-2 shadow">
+          <span className="px-4 py-2 text-sm font-medium text-gray-700">
             {label.toUpperCase()}
           </span>
           {options.map((option, i) => (
             <button
               key={i}
-              className={`text-left py-2 px-4 text-gray-700 ${
+              className={`px-4 py-2 text-left text-gray-700 ${
                 value === option.value
-                  ? "bg-blue-500 text-white cursor-auto"
+                  ? "cursor-auto bg-blue-500 text-white"
                   : "hover:bg-gray-100"
               }`}
               onClick={() => handleSelect(option.value)}

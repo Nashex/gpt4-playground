@@ -14,10 +14,10 @@ export default function Playground() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex flex-col max-h-screen max-w-screen w-screen">
+      <main className="max-w-screen flex max-h-screen w-screen flex-col">
         <PlaygroundHeader />
-        <div className="flex flex-row grow max-h-[calc(100vh-60px)] h-[calc(100vh-60px)]">
-          <div className="flex flex-col md:flex-row items-stretch grow">
+        <div className="flex h-[calc(100vh-60px)] max-h-[calc(100vh-60px)] grow flex-row">
+          <div className="flex grow flex-col items-stretch md:flex-row">
             <SystemMessage />
             <PlaygroundMessages />
           </div>

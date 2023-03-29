@@ -9,7 +9,7 @@ export default function AddMessage({}: Props) {
 
   return (
     <button
-      className="flex flex-row p-4 gap-x-4 text-gray-700 hover:bg-gray-100 cursor-pointer"
+      className="flex cursor-pointer flex-row gap-x-4 p-4 text-gray-700 hover:bg-gray-100"
       onClick={() => addMessage("", false)}
     >
       <MdAddCircleOutline size={24} />

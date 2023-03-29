@@ -25,57 +25,57 @@ export default function ChatSidebar({}: Props) {
   const [dark, setDark] = React.useState(false);
 
   return (
-    <div className="dark text-primary h-full max-h-screen md:fixed md:flex flex-col bg-gray-900 md:w-[260px] top-0 left-0">
-      <div className="flex h-full flex-col p-2 items-stretch">
+    <div className="dark left-0 top-0 h-full max-h-screen flex-col bg-gray-900 text-primary md:fixed md:flex md:w-[260px]">
+      <div className="flex h-full flex-col items-stretch p-2">
         <Link
           href="/"
-          className="flex gap-3 items-center p-4 border hover:bg-gray-500/10 rounded border-white/20 transition-colors"
+          className="flex items-center gap-3 rounded border border-white/20 p-4 transition-colors hover:bg-gray-500/10"
         >
           <MdAdd />
           New chat
         </Link>
-        <div className="flex-1 overflow-y-auto mt-2 scrollbar-thin scrollbar-thumb-bg-secondary scrollbar-track-bg-tertiary scrollbar-thumb-rounded">
-          <div className="gap-y-2 flex flex-col">
+        <div className="scrollbar-thumb-rounded mt-2 flex-1 overflow-y-auto scrollbar-thin scrollbar-track-bg-tertiary scrollbar-thumb-bg-secondary">
+          <div className="flex flex-col gap-y-2">
             {Object.keys(conversations).map((key) => (
               <Link
                 key={key}
                 href={`/chat/${key}`}
-                className="relative flex gap-3 items-center p-4 hover:bg-gray-500/10 rounded transition-colors truncate"
+                className="relative flex items-center gap-3 truncate rounded p-4 transition-colors hover:bg-gray-500/10"
               >
                 <span>
                   <MdChatBubbleOutline />
                 </span>
                 {conversations[key][0]?.content}
-                <div className="absolute h-full bg-gradient-to-l from-[rgb(var(--bg-primary))] to-transparent z-10  w-24 right-0 bottom-0" />
+                <div className="absolute bottom-0 right-0 z-10 h-full w-24  bg-gradient-to-l from-[rgb(var(--bg-primary))] to-transparent" />
               </Link>
             ))}
           </div>
         </div>
 
-        <div className="flex flex-col border-y border-white/10 py-2 gap-y-2">
-          <div className="p-4 border-b pb-6 border-white/10">
-            <h3 className="text-sm font-medium mb-2">YOUR API KEY</h3>
-            <span className="relative flex gap-3 text-primary/80 items-center transition-colors whitespace-nowrap text-ellipsis overflow-hidden">
+        <div className="flex flex-col gap-y-2 border-y border-white/10 py-2">
+          <div className="border-b border-white/10 p-4 pb-6">
+            <h3 className="mb-2 text-sm font-medium">YOUR API KEY</h3>
+            <span className="relative flex items-center gap-3 overflow-hidden text-ellipsis whitespace-nowrap text-primary/80 transition-colors">
               {token || "No api key set"}
-              <div className="absolute h-full bg-gradient-to-l from-[rgb(var(--bg-primary))] to-transparent z-10  w-24 right-0 bottom-0" />
+              <div className="absolute bottom-0 right-0 z-10 h-full w-24  bg-gradient-to-l from-[rgb(var(--bg-primary))] to-transparent" />
             </span>
           </div>
           <button
-            className="flex gap-3 items-center p-4 hover:bg-gray-500/10 rounded transition-colors"
+            className="flex items-center gap-3 rounded p-4 transition-colors hover:bg-gray-500/10"
             onClick={clearToken}
           >
             <MdToken />
             Clear Api Key
           </button>
           <button
-            className="flex gap-3 items-center p-4 hover:bg-gray-500/10 rounded transition-colors"
+            className="flex items-center gap-3 rounded p-4 transition-colors hover:bg-gray-500/10"
             onClick={clearConversations}
           >
             <MdDeleteOutline />
             Clear Conversations
           </button>
           <button
-            className="flex gap-3 items-center p-4 hover:bg-gray-500/10 rounded transition-colors"
+            className="flex items-center gap-3 rounded p-4 transition-colors hover:bg-gray-500/10"
             onClick={handleThemeChange}
           >
             <MdColorLens />
@@ -84,7 +84,9 @@ export default function ChatSidebar({}: Props) {
         </div>
 
         <Github />
-        <span className="text-center text-primary/80">Made with ❤️ by Nashex</span>
+        <span className="text-center text-primary/80">
+          Made with ❤️ by Nashex
+        </span>
       </div>
     </div>
   );

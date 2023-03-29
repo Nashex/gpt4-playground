@@ -29,23 +29,23 @@ export default function AddTokenModal({ buttonClassName }: Props) {
   return (
     <>
       <button
-        className={`hidden p-4 rounded text-white bg-green-500 hover:bg-green-600 md:block ${buttonClassName}`}
+        className={`hidden rounded bg-green-500 p-4 text-white hover:bg-green-600 md:block ${buttonClassName}`}
         onClick={() => setOpen(true)}
       >
         Add your API token
       </button>
       <button
-        className={`flex gap-x-1 items-center p-4 rounded text-white bg-green-500 hover:bg-green-600 md:hidden ${buttonClassName}`}
+        className={`flex items-center gap-x-1 rounded bg-green-500 p-4 text-white hover:bg-green-600 md:hidden ${buttonClassName}`}
         onClick={() => setOpen(true)}
       >
         <MdToken /> Api Key
       </button>
       {open && (
-        <div className="absolute z-50 w-full h-full top-0 left-0 bg-black bg-opacity-50 flex justify-center items-center transition-all">
-          <div className="relative bg-tertiary p-4 rounded shadow-xl max-w-2xl m-4">
-            <div className="absolute top-0 m-2 right-0">
+        <div className="absolute left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-50 transition-all">
+          <div className="relative m-4 max-w-2xl rounded bg-tertiary p-4 shadow-xl">
+            <div className="absolute right-0 top-0 m-2">
               <button
-                className="p-2 rounded text-primary hover:bg-primary/50"
+                className="rounded p-2 text-primary hover:bg-primary/50"
                 onClick={() => setOpen(false)}
               >
                 <MdClose />
@@ -54,7 +54,7 @@ export default function AddTokenModal({ buttonClassName }: Props) {
             <h1 className="text-2xl font-medium text-primary">
               Your API token
             </h1>
-            <p className="text-lg mt-4 text-primary/80">
+            <p className="mt-4 text-lg text-primary/80">
               You can get your API token from the{" "}
               <a
                 href="https://beta.openai.com/account/api-keys"
@@ -80,21 +80,21 @@ export default function AddTokenModal({ buttonClassName }: Props) {
               <input
                 type="text"
                 placeholder="sk-NhU98cac878..."
-                className="bg-secondary rounded border-none outline-none p-4 w-full text-primary mt-4"
+                className="mt-4 w-full rounded border-none bg-secondary p-4 text-primary outline-none"
                 onChange={handleInput}
                 value={input}
               />
-              <div className="flex justify-end mt-4">
+              <div className="mt-4 flex justify-end">
                 <button
                   type="button"
-                  className="px-4 py-2 rounded text-primary hover:bg-primary/50 mr-2"
+                  className="mr-2 rounded px-4 py-2 text-primary hover:bg-primary/50"
                   onClick={handleClear}
                 >
                   Clear Token
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded text-white hover:bg-green-600 bg-green-500"
+                  className="rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
                 >
                   Add
                 </button>
