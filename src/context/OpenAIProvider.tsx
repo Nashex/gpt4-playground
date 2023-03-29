@@ -186,7 +186,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
         if (!body) return;
         if (!ok)
           throw new Error(
-            "Failed to fetch completion. Please check your API key and try again."
+            "Failed to fetch completion. Please check your API key and try again. Additionally, you may be seeing this error because you do not have access to GPT-4."
           );
 
         const reader = body.getReader();
