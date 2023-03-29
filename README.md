@@ -6,7 +6,7 @@ This project allows you to use your API key in a mock ChatGPT environment...this
 
 All API keys are stored in your browser's local storage, so you can use this project without having to worry about your API key being stolen.
 
-![ChatGpt-4 Playground](https://imgur.com/ihZPFOJ)
+![ChatGpt-4 Playground](https://i.imgur.com/ihZPFOJ.png)
 
 ## Contributing
 If you would like to contribute to this project, please feel free to open a pull request or an issue, I hashed this project out in a few hours so there are bound to be some bugs!
