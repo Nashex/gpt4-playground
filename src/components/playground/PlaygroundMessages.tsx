@@ -39,7 +39,7 @@ export default function PlaygroundMessages({  }: Props) {
   );
 
   return (
-    <div className="grow max-h-screen flex flex-col justify-between">
+    <div className="md:grow flex flex-col justify-between overflow-hidden">
       <div
         className="flex flex-col items-stretch m-4 px-4 overflow-y-auto"
         ref={messageContainer}
@@ -50,7 +50,7 @@ export default function PlaygroundMessages({  }: Props) {
         <AddMessage />
       </div>
 
-      <div className="mx-4">
+      <div className="mx-4 bg-white">
         <button
           className="bg-blue-500 text-white m-4 p-2 w-[80px] rounded"
           onClick={submit}

@@ -67,7 +67,7 @@ export default function PlaygroundMessage({
     >
       <div className="basis-3/12">
         <button
-          className={`text-sm font-semibold p-2 rounded text-gray-700 transition-all ${highlight &&
+          className={`text-sm font-semibold p-2 rounded text-gray-700 transition-all select-none ${highlight &&
             "bg-gray-300"}`}
           onClick={handleToggleRole}
         >

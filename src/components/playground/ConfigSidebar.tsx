@@ -19,7 +19,7 @@ export default function ConfigSidebar({  }: Props) {
   };
 
   return (
-    <div className="flex flex-col min-w-[240px] p-4 items-stretch gap-y-4">
+    <div className="hidden md:flex flex-col min-w-[240px] p-4 items-stretch gap-y-4">
       <Dropdown
         label="Model"
         options={[

@@ -14,10 +14,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex flex-col">
+      <main className="flex flex-col max-h-screen max-w-screen w-screen">
         <Header />
-        <div className="flex flex-row grow max-h-[calc(100vh-60px)] h-[calc(100vh-60px)] max-w-screen w-screen">
-          <div className="flex flex-row items-stretch h-full grow">
+        <div className="flex flex-row grow max-h-[calc(100vh-60px)] h-[calc(100vh-60px)]">
+          <div className="flex flex-col md:flex-row items-stretch grow">
             <SystemMessage />
             <PlaygroundMessages />
           </div>
