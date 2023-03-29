@@ -16,13 +16,21 @@ type Props = {};
 export default function ChatSidebar({}: Props) {
   const { token, clearToken } = useAuth();
   const { conversations, clearConversations } = useOpenAI();
+  const [dark, setDark] = React.useState(false);
+
+  React.useEffect(() => {
+    if (localStorage.theme === "dark") {
+      setDark(true);
+    } else {
+      setDark(false);
+    }
+  }, []);
 
   const handleThemeChange = () => {
     document.documentElement.classList.toggle("dark");
     localStorage.theme = localStorage.theme === "dark" ? "light" : "dark";
+    setDark(!dark);
   };
-
-  const [dark, setDark] = React.useState(false);
 
   return (
     <div className="dark left-0 top-0 h-full max-h-screen flex-col bg-gray-900 text-primary md:fixed md:flex md:w-[260px]">
