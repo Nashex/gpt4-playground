@@ -1,7 +1,8 @@
 import { useOpenAI } from "@/context/OpenAIProvider";
 import { OpenAIChatMessage } from "@/utils/OpenAI";
 import React from "react";
-import { MdEdit, MdOutlineCancel, MdPerson, MdSmartToy } from "react-icons/md";
+import { MdPerson, MdSmartToy } from "react-icons/md";
+import ChatMessageContent from "./ChatMessageContent";
 
 type Props = {
   message: OpenAIChatMessage;
@@ -27,9 +28,9 @@ export default function ChatMessage({ message: { id, role, content } }: Props) {
           {role === "user" ? <MdPerson /> : <MdSmartToy />}
         </div>
         <div className="basis-10/12 items-center">
-          <p className="text-md w-full resize-none rounded p-4 text-primary focus:border-transparent focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600">
-            {content}
-          </p>
+          <div className="prose dark:prose-invert prose-code:text-primary prose-pre:p-0 prose-pre:bg-transparent text-md w-full rounded p-4 text-primary">
+            <ChatMessageContent content={content} />
+          </div>
         </div>
 
         <div className="flex basis-2/12 justify-center">
