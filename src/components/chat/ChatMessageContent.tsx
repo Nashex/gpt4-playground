@@ -12,6 +12,8 @@ import markdown from "react-syntax-highlighter/dist/cjs/languages/prism/markdown
 import python from "react-syntax-highlighter/dist/cjs/languages/prism/python";
 import cpp from "react-syntax-highlighter/dist/cjs/languages/prism/cpp";
 import json from "react-syntax-highlighter/dist/cjs/languages/prism/json";
+import { NormalComponents } from "react-markdown/lib/complex-types";
+import { SpecialComponents } from "react-markdown/lib/ast-to-react";
 
 SyntaxHighlighter.registerLanguage("tsx", tsx);
 SyntaxHighlighter.registerLanguage("typescript", typescript);
@@ -21,6 +23,7 @@ SyntaxHighlighter.registerLanguage("markdown", markdown);
 SyntaxHighlighter.registerLanguage("python", python);
 SyntaxHighlighter.registerLanguage("cpp", cpp);
 SyntaxHighlighter.registerLanguage("json", json);
+SyntaxHighlighter.registerLanguage("json", json);
 
 type Props = {
   content: string;
@@ -29,7 +32,25 @@ type Props = {
 export default function ChatMessageContent({ content }: Props) {
   const syntaxTheme = oneDark;
 
-  const MarkdownComponents: object = {
+  const MarkdownComponents: Partial<
+    Omit<NormalComponents, keyof SpecialComponents> & SpecialComponents
+  > = {
+    // Work around for not rending <em> and <strong> tags
+    em: ({ node, inline, className, children, ...props }: any) => {
+      return (
+        <span className={className} {...props}>
+          _{children}_
+        </span>
+      );
+    },
+    strong: ({ node, inline, className, children, ...props }: any) => {
+      return (
+        <span className={className} {...props}>
+          __{children}__
+        </span>
+      );
+    },
+
     code({ node, inline, className, ...props }: any) {
       const hasLang = /language-(\w+)/.exec(className || "");
       const hasMeta = node?.data?.meta;

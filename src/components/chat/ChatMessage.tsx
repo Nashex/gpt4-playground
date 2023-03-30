@@ -28,7 +28,7 @@ export default function ChatMessage({ message: { id, role, content } }: Props) {
           {role === "user" ? <MdPerson /> : <MdSmartToy />}
         </div>
         <div className="basis-10/12 items-center">
-          <div className="prose dark:prose-invert prose-code:text-primary prose-pre:p-0 prose-pre:bg-transparent text-md w-full rounded p-4 text-primary">
+          <div className="text-md prose w-full rounded p-4 text-primary dark:prose-invert prose-code:text-primary prose-pre:bg-transparent prose-pre:p-0">
             <ChatMessageContent content={content} />
           </div>
         </div>
