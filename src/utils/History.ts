@@ -32,16 +32,41 @@ export const storeConversation = (
   return id;
 };
 
-// Get conversations from local storage
-export const getHistory: () => History = () => {
-  const history = localStorage.getItem(HISTORY_KEY);
-  return history ? JSON.parse(history) : {};
-};
-
 // Get a conversation from local storage
 export const getConversation = (id: string) => {
   const history = getHistory();
   return history[id];
+};
+
+// Update a conversation in local storage
+export const updateConversation = (
+  id: string,
+  conversation: Partial<Conversation>
+) => {
+  const history = getHistory();
+  localStorage.setItem(
+    HISTORY_KEY,
+    JSON.stringify({
+      ...history,
+      [id]: {
+        ...history[id],
+        ...conversation,
+      },
+    })
+  );
+};
+
+// Delete a conversation from local storage
+export const deleteConversationFromHistory = (id: string) => {
+  const history = getHistory();
+  delete history[id];
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+};
+
+// Get conversations from local storage
+export const getHistory: () => History = () => {
+  const history = localStorage.getItem(HISTORY_KEY);
+  return history ? JSON.parse(history) : {};
 };
 
 // Clear conversations from local storage

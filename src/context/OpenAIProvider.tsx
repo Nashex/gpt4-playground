@@ -4,6 +4,8 @@ import {
   getHistory,
   storeConversation,
   History,
+  deleteConversationFromHistory,
+  updateConversation,
 } from "@/utils/History";
 import {
   defaultConfig,
@@ -27,7 +29,10 @@ const defaultContext = {
   updateSystemMessage: (content: string) => {},
   addMessage: () => {},
   removeMessage: (id: number) => {},
+  conversationName: "",
   conversationId: "",
+  deleteConversation: () => {},
+  updateConversationName: () => {},
   conversations: {} as History,
   clearConversations: () => {},
   clearConversation: () => {},
@@ -51,7 +56,10 @@ const OpenAIContext = React.createContext<{
     role?: "user" | "assistant"
   ) => void;
   removeMessage: (id: number) => void;
+  conversationName: string;
   conversationId: string;
+  deleteConversation: (id: string) => void;
+  updateConversationName: (id: string, name: string) => void;
   conversations: History;
   clearConversation: () => void;
   clearConversations: () => void;
@@ -75,6 +83,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
     {} as History
   );
   const [conversationId, setConversationId] = React.useState<string>("");
+  const [conversationName, setConversationName] = React.useState("");
   const [systemMessage, setSystemMessage] = React.useState<OpenAISystemMessage>(
     defaultContext.systemMessage
   );
@@ -142,7 +151,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
     if (messages.length === 0) return;
 
     const conversation = {
-      name: "",
+      name: conversationName,
       systemMessage,
       messages,
       config,
@@ -158,16 +167,17 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     handleStoreConversation();
-  }, [messages]);
+  }, [messages, systemMessage, config]);
 
   const loadConversation = (id: string, conversation: Conversation) => {
     setConversationId(id);
 
-    const { systemMessage, messages, config } = conversation;
+    const { systemMessage, messages, config, name } = conversation;
 
     setSystemMessage(systemMessage);
     setMessages(messages);
     updateConfig(config);
+    setConversationName(name);
   };
 
   const clearConversations = useCallback(() => {
@@ -184,6 +194,34 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
     setMessages([]);
     setSystemMessage(defaultContext.systemMessage);
     setConversationId("");
+  };
+
+  const deleteConversation = (id: string) => {
+    deleteConversationFromHistory(id);
+    setConversations((prev) => {
+      const { [id]: _, ...rest } = prev;
+      return rest;
+    });
+
+    if (id === conversationId) clearConversation();
+  };
+
+  const updateConversationName = (id: string, name: string) => {
+    setConversations((prev) => {
+      const conversation = prev[id];
+      if (!conversation) return prev;
+      return {
+        ...prev,
+        [id]: {
+          ...conversation,
+          name,
+        },
+      };
+    });
+
+    if (id === conversationId) setConversationName(name);
+
+    updateConversation(id, { name });
   };
 
   const submit = useCallback(
@@ -222,7 +260,8 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
           const { error } = JSON.parse(chunkValue);
 
           throw new Error(
-            error?.message || "Failed to fetch response, check your API key and try again."
+            error?.message ||
+              "Failed to fetch response, check your API key and try again."
           );
         }
 
@@ -297,6 +336,9 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
       addMessage,
       removeMessage,
       conversationId,
+      conversationName,
+      updateConversationName,
+      deleteConversation,
       loadConversation,
       clearConversation,
       conversations,

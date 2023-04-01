@@ -1,6 +1,6 @@
 import React from "react";
 import { MdClose, MdMenu } from "react-icons/md";
-import ChatSidebar from "@/components/chat/ChatSidebar";
+import ChatSidebar from "@/components/chat/sidebar/ChatSidebar";
 import { Transition } from "@headlessui/react";
 import AddTokenModal from "./../auth/AddTokenModal";
 
