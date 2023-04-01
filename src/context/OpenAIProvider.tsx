@@ -45,7 +45,11 @@ const OpenAIContext = React.createContext<{
   messages: OpenAIChatMessage[];
   config: OpenAIConfig;
   updateSystemMessage: (content: string) => void;
-  addMessage: (content?: string, submit?: boolean) => void;
+  addMessage: (
+    content?: string,
+    submit?: boolean,
+    role?: "user" | "assistant"
+  ) => void;
   removeMessage: (id: number) => void;
   conversationId: string;
   conversations: History;
@@ -256,18 +260,17 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
   );
 
   const addMessage = useCallback(
-    (content: string = "", submit_: boolean = false) => {
+    (
+      content: string = "",
+      submit_: boolean = false,
+      role: "user" | "assistant" = "user"
+    ) => {
       setMessages((prev) => {
         const messages = [
           ...prev,
           {
             id: prev.length,
-            role:
-              prev.length > 0
-                ? prev[prev.length - 1].role === "user"
-                  ? "assistant"
-                  : "user"
-                : "user",
+            role,
             content: content || "",
           } as OpenAIChatMessage,
         ];

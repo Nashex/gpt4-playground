@@ -16,7 +16,7 @@ export default function ChatInput({}: Props) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     if (loading) return;
     e.preventDefault();
-    addMessage(input, true);
+    addMessage(input, true, "user");
     setInput("");
   };
 
