@@ -2,16 +2,18 @@ import { useOpenAI } from "@/context/OpenAIProvider";
 import React from "react";
 import Dropdown from "../input/Dropdown";
 import Slider from "../input/Slider";
-import { OpenAIConfig } from "@/utils/OpenAI";
+import { OpenAIChatModels, OpenAIConfig } from "@/utils/OpenAI";
+import useModels from "../hooks/useModels";
 
 type Props = {};
 
 export default function ConfigSidebar({}: Props) {
   const { config, updateConfig } = useOpenAI();
+  const { models, loadingModels } = useModels();
 
   const handleUpdateConfig = <K extends keyof OpenAIConfig>(
     id: K,
-    value: OpenAIConfig[K]
+    value: OpenAIConfig[K] | undefined
   ) => {
     updateConfig({
       [id]: value,
@@ -22,10 +24,11 @@ export default function ConfigSidebar({}: Props) {
     <div className="hidden min-w-[240px] flex-col items-stretch gap-y-4 p-4 md:flex">
       <Dropdown
         label="Model"
-        options={[
-          { label: "gpt-4", value: "gpt-4" },
-          { label: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
-        ]}
+        options={
+          loadingModels
+            ? []
+            : (models.map(({ id }) => ({ label: id, value: id })) as any)
+        }
         value={config.model}
         onSelect={(option) => handleUpdateConfig("model", option)}
       />
@@ -40,7 +43,7 @@ export default function ConfigSidebar({}: Props) {
       />
       <Slider
         label="maximum length"
-        range={[0, 32768]}
+        range={[0, OpenAIChatModels[config.model].maxLimit || 8192]}
         step={1}
         value={config.max_tokens as number}
         onChange={(value: OpenAIConfig["max_tokens"]) =>
