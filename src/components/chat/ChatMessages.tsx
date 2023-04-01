@@ -44,7 +44,10 @@ export default function ChatMessages({}: Props) {
       setPrevMessageLength(messages.length);
     }
 
-    if (messageContainer.current && (!scrolling || messages.length != prevMessageLength)) {
+    if (
+      messageContainer.current &&
+      (!scrolling || messages.length != prevMessageLength)
+    ) {
       messageContainer.current.scrollTop =
         messageContainer.current.scrollHeight;
     }

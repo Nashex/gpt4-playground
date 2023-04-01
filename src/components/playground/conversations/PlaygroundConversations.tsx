@@ -13,7 +13,7 @@ export default function PlaygroundCoversations({}: Props) {
 
   return (
     <Transition
-      className="h-0 md:h-auto md:w-0 overflow-y-auto"
+      className="h-0 overflow-y-auto md:h-auto md:w-0"
       show={showConversations}
       enter="transition-all duration-300"
       enterFrom="opacity-0 md:-translate-x-full -translate-y-full md:-translate-y-0 basis-0"
@@ -22,7 +22,7 @@ export default function PlaygroundCoversations({}: Props) {
       leaveFrom="opacity-100 basis-3/12"
       leaveTo="opacity-0 md:-translate-x-full -translate-y-full md:-translate-y-0  basis-0"
     >
-      <div className="mx-4 my-4 md:mr-0 overflow-y-auto">
+      <div className="mx-4 my-4 overflow-y-auto md:mr-0">
         <div className="flex w-full flex-row items-center justify-between text-lg text-gray-700">
           <h2 className="font-bold">Conversations</h2>
           <MdClear

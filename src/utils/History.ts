@@ -5,21 +5,18 @@ const HISTORY_KEY = "pg-history";
 
 // Types
 export type Conversation = {
-  name: string,
-  lastMessage: number, // Unix timestamp
+  name: string;
+  lastMessage: number; // Unix timestamp
 
-  systemMessage: OpenAISystemMessage,
-  messages: OpenAIChatMessage[],
-  config: OpenAIConfig,
-}
+  systemMessage: OpenAISystemMessage;
+  messages: OpenAIChatMessage[];
+  config: OpenAIConfig;
+};
 
 export type History = Record<string, Conversation>;
 
 // Store conversation in local storage
-export const storeConversation = (
-  id: string,
-  conversation: Conversation
-) => {
+export const storeConversation = (id: string, conversation: Conversation) => {
   const history = getHistory();
   id = id || uuidv4();
   localStorage.setItem(
