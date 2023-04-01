@@ -1,5 +1,16 @@
-import { clearHistory, getHistory, storeConversation } from "@/utils/History";
-import { defaultConfig, OpenAIChatMessage, OpenAIConfig } from "@/utils/OpenAI";
+import {
+  clearHistory,
+  Conversation,
+  getHistory,
+  storeConversation,
+  History,
+} from "@/utils/History";
+import {
+  defaultConfig,
+  OpenAIChatMessage,
+  OpenAIConfig,
+  OpenAISystemMessage,
+} from "@/utils/OpenAI";
 import React, { PropsWithChildren, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthProvider";
@@ -10,37 +21,37 @@ const defaultContext = {
   systemMessage: {
     role: "system",
     content: "You are a helpful AI chatbot.",
-  } as { role: "system" } & OpenAIChatMessage,
+  } as OpenAISystemMessage,
   messages: [] as OpenAIChatMessage[],
   config: defaultConfig as OpenAIConfig,
   updateSystemMessage: (content: string) => {},
   addMessage: () => {},
   removeMessage: (id: number) => {},
   conversationId: "",
-  conversations: {} as Record<string, OpenAIChatMessage[]>,
+  conversations: {} as History,
   clearConversations: () => {},
   clearConversation: () => {},
-  loadConversation: (id: string, messages: OpenAIChatMessage[]) => {},
+  loadConversation: (id: string, conversation: Conversation) => {},
   toggleMessageRole: (id: number) => {},
   updateMessageContent: (id: number, content: string) => {},
   updateConfig: (newConfig: Partial<OpenAIConfig>) => {},
   submit: () => {},
-  loading: false,
+  loading: true,
   error: "",
 };
 
 const OpenAIContext = React.createContext<{
-  systemMessage: { role: "system" } & OpenAIChatMessage;
+  systemMessage: OpenAISystemMessage;
   messages: OpenAIChatMessage[];
   config: OpenAIConfig;
   updateSystemMessage: (content: string) => void;
   addMessage: (content?: string, submit?: boolean) => void;
   removeMessage: (id: number) => void;
   conversationId: string;
-  conversations: Record<string, OpenAIChatMessage[]>;
+  conversations: History;
   clearConversation: () => void;
   clearConversations: () => void;
-  loadConversation: (id: string, messages: OpenAIChatMessage[]) => void;
+  loadConversation: (id: string, conversation: Conversation) => void;
   toggleMessageRole: (id: number) => void;
   updateMessageContent: (id: number, content: string) => void;
   updateConfig: (newConfig: Partial<OpenAIConfig>) => void;
@@ -54,19 +65,21 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [systemMessage, setSystemMessage] = React.useState<
-    { role: "system" } & OpenAIChatMessage
-  >(defaultContext.systemMessage);
-  const [messages, setMessages] = React.useState<OpenAIChatMessage[]>([]);
-  const [config, setConfig] = React.useState<OpenAIConfig>(defaultConfig);
-  const [conversations, setConversations] = React.useState<
-    Record<string, OpenAIChatMessage[]>
-  >({});
+
+  // Conversation state
+  const [conversations, setConversations] = React.useState<History>(
+    {} as History
+  );
   const [conversationId, setConversationId] = React.useState<string>("");
+  const [systemMessage, setSystemMessage] = React.useState<OpenAISystemMessage>(
+    defaultContext.systemMessage
+  );
+  const [config, setConfig] = React.useState<OpenAIConfig>(defaultConfig);
+  const [messages, setMessages] = React.useState<OpenAIChatMessage[]>([]);
 
   // Load conversation from local storage
   useEffect(() => {
-    setConversations(getHistory() || {});
+    setConversations(getHistory());
   }, []);
 
   const updateSystemMessage = (content: string) => {
@@ -121,30 +134,41 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
     });
   };
 
-  const handleStoreConversation = useCallback(
-    (messages: OpenAIChatMessage[]) => {
-      if (messages.length === 0) return;
+  const handleStoreConversation = useCallback(() => {
+    if (messages.length === 0) return;
 
-      let id = storeConversation(conversationId, messages);
-      setConversationId(id);
-      setConversations((prev) => ({ ...prev, [id]: messages }));
+    const conversation = {
+      name: "",
+      systemMessage,
+      messages,
+      config,
+      lastMessage: Date.now(),
+    } as Conversation;
 
-      if (router.pathname === CHAT_ROUTE) router.push(`/chat/${id}`);
-    },
-    [conversationId, messages]
-  );
+    let id = storeConversation(conversationId, conversation);
+    setConversationId(id);
+    setConversations((prev) => ({ ...prev, [id]: conversation }));
+
+    if (router.pathname === CHAT_ROUTE) router.push(`/chat/${id}`);
+  }, [conversationId, messages]);
 
   useEffect(() => {
-    handleStoreConversation(messages);
+    handleStoreConversation();
   }, [messages]);
 
-  const loadConversation = (id: string, messages: OpenAIChatMessage[]) => {
+  const loadConversation = (id: string, conversation: Conversation) => {
     setConversationId(id);
+
+    const { systemMessage, messages, config } = conversation;
+
+    setSystemMessage(systemMessage);
     setMessages(messages);
+    updateConfig(config);
   };
 
   const clearConversations = useCallback(() => {
     clearHistory();
+
     setMessages([]);
     setConversationId("");
     setConversations({});
@@ -154,6 +178,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
 
   const clearConversation = () => {
     setMessages([]);
+    setSystemMessage(defaultContext.systemMessage);
     setConversationId("");
   };
 
@@ -265,8 +290,8 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
       conversationId,
       loadConversation,
       clearConversation,
-      clearConversations,
       conversations,
+      clearConversations,
       toggleMessageRole,
       updateMessageContent,
       updateConfig,
@@ -282,8 +307,8 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
       submit,
       conversationId,
       conversations,
-      error,
       clearConversations,
+      error,
     ]
   );
 

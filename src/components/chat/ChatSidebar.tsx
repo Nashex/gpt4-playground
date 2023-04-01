@@ -54,7 +54,8 @@ export default function ChatSidebar({}: Props) {
                 <span>
                   <MdChatBubbleOutline />
                 </span>
-                {conversations[key][0]?.content}
+                {conversations[key].name ||
+                  conversations[key].messages[0].content}
                 <div className="absolute bottom-0 right-0 z-10 h-full w-24  bg-gradient-to-l from-[rgb(var(--bg-primary))] to-transparent" />
               </Link>
             ))}

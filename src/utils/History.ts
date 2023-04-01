@@ -1,26 +1,40 @@
-import { OpenAIChatMessage } from "./OpenAI";
+import { OpenAIChatMessage, OpenAIConfig, OpenAISystemMessage } from "./OpenAI";
 import { v4 as uuidv4 } from "uuid";
+
+const HISTORY_KEY = "pg-history";
+
+// Types
+export type Conversation = {
+  name: string,
+  lastMessage: number, // Unix timestamp
+
+  systemMessage: OpenAISystemMessage,
+  messages: OpenAIChatMessage[],
+  config: OpenAIConfig,
+}
+
+export type History = Record<string, Conversation>;
 
 // Store conversation in local storage
 export const storeConversation = (
   id: string,
-  messages: OpenAIChatMessage[]
+  conversation: Conversation
 ) => {
   const history = getHistory();
   id = id || uuidv4();
   localStorage.setItem(
-    "history",
+    HISTORY_KEY,
     JSON.stringify({
       ...history,
-      [id]: messages,
+      [id]: conversation,
     })
   );
   return id;
 };
 
 // Get conversations from local storage
-export const getHistory: () => Record<string, OpenAIChatMessage[]> = () => {
-  const history = localStorage.getItem("history");
+export const getHistory: () => History = () => {
+  const history = localStorage.getItem(HISTORY_KEY);
   return history ? JSON.parse(history) : {};
 };
 
@@ -32,5 +46,5 @@ export const getConversation = (id: string) => {
 
 // Clear conversations from local storage
 export const clearHistory = () => {
-  localStorage.removeItem("history");
+  localStorage.removeItem(HISTORY_KEY);
 };

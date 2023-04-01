@@ -10,6 +10,11 @@ export interface OpenAIChatMessage {
   content: string;
 }
 
+export interface OpenAISystemMessage {
+  role: "system";
+  content: string;
+}
+
 export interface OpenAIConfig {
   model: string;
   temperature?: number;

@@ -9,9 +9,13 @@ type Props = {};
 export default function ChatMessages({}: Props) {
   const { messages, submit } = useOpenAI();
   const messageContainer = React.useRef<HTMLDivElement>(null);
+  const [prevMessageLength, setPrevMessageLength] = React.useState(0);
 
   useEffect(() => {
-    if (messageContainer.current) {
+    if (messages.length > prevMessageLength) {
+      setPrevMessageLength(messages.length);
+    }
+    if (prevMessageLength != messages.length && messageContainer.current) {
       messageContainer.current.scrollTop =
         messageContainer.current.scrollHeight;
     }
