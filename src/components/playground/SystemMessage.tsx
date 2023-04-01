@@ -10,7 +10,7 @@ export default function SystemMessage({}: Props) {
   return (
     <TextArea
       title="System"
-      className="basis-4/12"
+      className="grow"
       placeholder="You are a helpful assistant."
       value={systemMessage.content}
       onChange={(e) => updateSystemMessage(e.target.value)}
