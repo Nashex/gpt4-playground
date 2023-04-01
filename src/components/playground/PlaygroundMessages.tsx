@@ -39,7 +39,7 @@ export default function PlaygroundMessages({}: Props) {
   }, [submit]);
 
   return (
-    <div className="flex grow flex-col justify-between overflow-hidden md:grow">
+    <div className="flex grow flex-col justify-between md:grow">
       <div
         className="my-4 flex flex-col items-stretch overflow-y-auto px-4"
         ref={messageContainer}

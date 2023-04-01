@@ -9,17 +9,46 @@ type Props = {};
 export default function ChatMessages({}: Props) {
   const { messages, submit } = useOpenAI();
   const messageContainer = React.useRef<HTMLDivElement>(null);
+  const [scrolling, setScrolling] = React.useState(false);
   const [prevMessageLength, setPrevMessageLength] = React.useState(0);
 
+  // Scroll handling for auto scroll
   useEffect(() => {
-    if (messages.length > prevMessageLength) {
+    const handleScroll = () => {
+      if (messageContainer.current) {
+        if (
+          messageContainer.current.scrollTop <
+          messageContainer.current.scrollHeight -
+            messageContainer.current.offsetHeight
+        ) {
+          setScrolling(true);
+        } else {
+          setScrolling(false);
+        }
+      }
+    };
+
+    if (messageContainer.current) {
+      messageContainer.current.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (messageContainer.current) {
+        messageContainer.current.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (messages.length != prevMessageLength) {
       setPrevMessageLength(messages.length);
     }
-    if (prevMessageLength != messages.length && messageContainer.current) {
+
+    if (messageContainer.current && (!scrolling || messages.length != prevMessageLength)) {
       messageContainer.current.scrollTop =
         messageContainer.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, scrolling]);
 
   // Command Enter to submit
   useEffect(() => {

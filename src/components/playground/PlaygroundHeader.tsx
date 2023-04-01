@@ -10,7 +10,7 @@ export default function Header({}: Props) {
   const { conversationId } = useOpenAI();
 
   return (
-    <div className="flex h-[60px] flex-row items-center justify-between border-b border-gray-300 px-4">
+    <div className="flex h-[60px] flex-row items-center justify-between border-b border-gray-300 px-4 z-50 bg-white">
       <span className="text-lg font-bold">Playground</span>
 
       <div className="flex flex-row gap-x-4">

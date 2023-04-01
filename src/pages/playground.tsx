@@ -16,7 +16,7 @@ export default function Playground() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="max-w-screen flex max-h-screen w-screen flex-col">
+      <main className="relative max-w-screen flex max-h-screen w-screen flex-col">
         <PlaygroundProvider>
           <PlaygroundHeader />
           <div className="flex h-[calc(100vh-60px)] max-h-[calc(100vh-60px)] grow flex-row">
@@ -25,7 +25,7 @@ export default function Playground() {
               <div className="flex grow">
                 <SystemMessage />
               </div>
-              <div className="flex grow basis-7/12">
+              <div className="flex grow basis-7/12 overflow-hidden">
                 <PlaygroundMessages />
               </div>
             </div>
