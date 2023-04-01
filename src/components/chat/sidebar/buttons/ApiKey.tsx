@@ -14,7 +14,7 @@ export default function ApiKey({}: Props) {
 
   return (
     <div className="py-2">
-      <h3 className="mb-2 px-2 text-sm font-medium">YOUR API KEY</h3>
+      <h3 className="px-2 text-sm font-medium">YOUR API KEY</h3>
       {token ? (
         <div className="group flex flex-row items-center">
           <div className="relative flex items-center gap-3 overflow-hidden text-ellipsis whitespace-nowrap rounded p-3 text-primary/80 transition-colors">

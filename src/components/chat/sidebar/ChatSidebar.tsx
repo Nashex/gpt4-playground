@@ -7,6 +7,7 @@ import ThemeButton from "./buttons/ThemeButton";
 import ButtonContainer from "./buttons/ButtonContainer";
 import Conversations from "./conversation/Conversations";
 import ApiKey from "./buttons/ApiKey";
+import CurrentModel from './buttons/CurrentModel';
 
 type Props = {};
 
@@ -27,7 +28,8 @@ export default function ChatSidebar({}: Props) {
         <Conversations />
 
         <div className="flex flex-col gap-y-2 border-y border-white/10 py-2">
-          <div className="border-b border-white/10">
+          <div className="flex flex-col border-b border-white/10 gap-y-2">
+            <CurrentModel />
             <ApiKey />
           </div>
           <Link
