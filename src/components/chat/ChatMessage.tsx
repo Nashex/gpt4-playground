@@ -20,7 +20,7 @@ export default function ChatMessage({ message: { id, role, content } }: Props) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <div className="mx-auto flex w-full max-w-4xl flex-row items-center">
+      <div className="mx-auto flex w-full max-w-4xl overflow-x-auto flex-row justify-center items-center">
         <div
           className={`flex h-10 w-10 items-center justify-center text-4xl transition-colors ${
             hover ? "text-stone-300" : "text-primary/20"
@@ -29,7 +29,7 @@ export default function ChatMessage({ message: { id, role, content } }: Props) {
           {role === "user" ? <MdPerson /> : <MdSmartToy />}
         </div>
         <div className="basis-10/12 items-center">
-          <div className="text-md prose w-full rounded p-4 text-primary dark:prose-invert prose-code:text-primary prose-pre:bg-transparent prose-pre:p-0">
+          <div className="text-md prose max-w-4xl w-full rounded p-4 text-primary dark:prose-invert prose-code:text-primary prose-pre:bg-transparent prose-pre:p-0">
             {role === "user" ? (
               <UserMessageContent content={content} />
             ) : (

@@ -20,7 +20,7 @@ export default function Header({}: Props) {
         >
           <MdChatBubbleOutline />
         </Link>
-        <AddTokenModal buttonClassName="py-2" />
+        <AddTokenModal className="py-2" />
       </div>
     </div>
   );

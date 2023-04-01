@@ -12,6 +12,7 @@ import {
   OpenAIChatMessage,
   OpenAIConfig,
   OpenAISystemMessage,
+  OpenAIChatModels
 } from "@/utils/OpenAI";
 import React, { PropsWithChildren, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -125,10 +126,20 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
   };
 
   const updateConfig = (newConfig: Partial<OpenAIConfig>) => {
-    setConfig((prev) => ({
-      ...prev,
-      ...newConfig,
-    }));
+    setConfig((prev) => {
+      // If model changes set max tokens to half of the model's max tokens
+      if (newConfig.model && newConfig.model !== prev.model) {
+        newConfig.max_tokens = Math.floor(
+          OpenAIChatModels[newConfig.model].maxLimit / 2
+        );
+      }
+
+      return {
+        ...prev,
+        ...newConfig,
+      };
+    });
+
   };
 
   const updateMessageContent = (id: number, content: string) => {
