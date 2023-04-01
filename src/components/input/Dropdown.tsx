@@ -6,7 +6,7 @@ type Props = {
   label?: string;
   options: { label: string; value: string }[];
   value: string;
-  className: string;
+  className?: string;
   onSelect: (option: string) => void;
 };
 
