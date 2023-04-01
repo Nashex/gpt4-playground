@@ -1,5 +1,5 @@
 import ChatMessages from "@/components/chat/ChatMessages";
-import ChatSidebar from "@/components/chat/ChatSidebar";
+import ChatSidebar from "@/components/chat/sidebar/ChatSidebar";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
@@ -14,10 +14,14 @@ export default function Chat() {
   React.useEffect(() => {
     if (!id) return;
     if (typeof window !== "undefined") {
+      // Get the conversation from local storage
       const conversation = getConversation(id as string);
+
+      // If there is no conversation, redirect to the home page
       if (!conversation) {
         window.location.href = "/";
       } else if (conversationId !== id) {
+        // If the conversation is not loaded, load it
         loadConversation(id as string, conversation);
       }
     }

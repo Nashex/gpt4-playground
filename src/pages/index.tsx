@@ -1,5 +1,5 @@
 import ChatMessages from "@/components/chat/ChatMessages";
-import ChatSidebar from "@/components/chat/ChatSidebar";
+import ChatSidebar from "@/components/chat/sidebar/ChatSidebar";
 import Head from "next/head";
 import React, { useEffect } from "react";
 import { useOpenAI } from "@/context/OpenAIProvider";

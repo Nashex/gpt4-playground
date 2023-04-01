@@ -1,5 +1,18 @@
-import { clearHistory, getHistory, storeConversation } from "@/utils/History";
-import { defaultConfig, OpenAIChatMessage, OpenAIConfig } from "@/utils/OpenAI";
+import {
+  clearHistory,
+  Conversation,
+  getHistory,
+  storeConversation,
+  History,
+  deleteConversationFromHistory,
+  updateConversation,
+} from "@/utils/History";
+import {
+  defaultConfig,
+  OpenAIChatMessage,
+  OpenAIConfig,
+  OpenAISystemMessage,
+} from "@/utils/OpenAI";
 import React, { PropsWithChildren, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthProvider";
@@ -10,37 +23,47 @@ const defaultContext = {
   systemMessage: {
     role: "system",
     content: "You are a helpful AI chatbot.",
-  } as { role: "system" } & OpenAIChatMessage,
+  } as OpenAISystemMessage,
   messages: [] as OpenAIChatMessage[],
   config: defaultConfig as OpenAIConfig,
   updateSystemMessage: (content: string) => {},
   addMessage: () => {},
   removeMessage: (id: number) => {},
+  conversationName: "",
   conversationId: "",
-  conversations: {} as Record<string, OpenAIChatMessage[]>,
+  deleteConversation: () => {},
+  updateConversationName: () => {},
+  conversations: {} as History,
   clearConversations: () => {},
   clearConversation: () => {},
-  loadConversation: (id: string, messages: OpenAIChatMessage[]) => {},
+  loadConversation: (id: string, conversation: Conversation) => {},
   toggleMessageRole: (id: number) => {},
   updateMessageContent: (id: number, content: string) => {},
   updateConfig: (newConfig: Partial<OpenAIConfig>) => {},
   submit: () => {},
-  loading: false,
+  loading: true,
   error: "",
 };
 
 const OpenAIContext = React.createContext<{
-  systemMessage: { role: "system" } & OpenAIChatMessage;
+  systemMessage: OpenAISystemMessage;
   messages: OpenAIChatMessage[];
   config: OpenAIConfig;
   updateSystemMessage: (content: string) => void;
-  addMessage: (content?: string, submit?: boolean) => void;
+  addMessage: (
+    content?: string,
+    submit?: boolean,
+    role?: "user" | "assistant"
+  ) => void;
   removeMessage: (id: number) => void;
+  conversationName: string;
   conversationId: string;
-  conversations: Record<string, OpenAIChatMessage[]>;
+  deleteConversation: (id: string) => void;
+  updateConversationName: (id: string, name: string) => void;
+  conversations: History;
   clearConversation: () => void;
   clearConversations: () => void;
-  loadConversation: (id: string, messages: OpenAIChatMessage[]) => void;
+  loadConversation: (id: string, conversation: Conversation) => void;
   toggleMessageRole: (id: number) => void;
   updateMessageContent: (id: number, content: string) => void;
   updateConfig: (newConfig: Partial<OpenAIConfig>) => void;
@@ -54,19 +77,22 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [systemMessage, setSystemMessage] = React.useState<
-    { role: "system" } & OpenAIChatMessage
-  >(defaultContext.systemMessage);
-  const [messages, setMessages] = React.useState<OpenAIChatMessage[]>([]);
-  const [config, setConfig] = React.useState<OpenAIConfig>(defaultConfig);
-  const [conversations, setConversations] = React.useState<
-    Record<string, OpenAIChatMessage[]>
-  >({});
+
+  // Conversation state
+  const [conversations, setConversations] = React.useState<History>(
+    {} as History
+  );
   const [conversationId, setConversationId] = React.useState<string>("");
+  const [conversationName, setConversationName] = React.useState("");
+  const [systemMessage, setSystemMessage] = React.useState<OpenAISystemMessage>(
+    defaultContext.systemMessage
+  );
+  const [config, setConfig] = React.useState<OpenAIConfig>(defaultConfig);
+  const [messages, setMessages] = React.useState<OpenAIChatMessage[]>([]);
 
   // Load conversation from local storage
   useEffect(() => {
-    setConversations(getHistory() || {});
+    setConversations(getHistory());
   }, []);
 
   const updateSystemMessage = (content: string) => {
@@ -121,30 +147,42 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
     });
   };
 
-  const handleStoreConversation = useCallback(
-    (messages: OpenAIChatMessage[]) => {
-      if (messages.length === 0) return;
+  const handleStoreConversation = useCallback(() => {
+    if (messages.length === 0) return;
 
-      let id = storeConversation(conversationId, messages);
-      setConversationId(id);
-      setConversations((prev) => ({ ...prev, [id]: messages }));
+    const conversation = {
+      name: conversationName,
+      systemMessage,
+      messages,
+      config,
+      lastMessage: Date.now(),
+    } as Conversation;
 
-      if (router.pathname === CHAT_ROUTE) router.push(`/chat/${id}`);
-    },
-    [conversationId, messages]
-  );
+    let id = storeConversation(conversationId, conversation);
+    setConversationId(id);
+    setConversations((prev) => ({ ...prev, [id]: conversation }));
+
+    if (router.pathname === CHAT_ROUTE) router.push(`/chat/${id}`);
+  }, [conversationId, messages]);
 
   useEffect(() => {
-    handleStoreConversation(messages);
-  }, [messages]);
+    handleStoreConversation();
+  }, [messages, systemMessage, config]);
 
-  const loadConversation = (id: string, messages: OpenAIChatMessage[]) => {
+  const loadConversation = (id: string, conversation: Conversation) => {
     setConversationId(id);
+
+    const { systemMessage, messages, config, name } = conversation;
+
+    setSystemMessage(systemMessage);
     setMessages(messages);
+    updateConfig(config);
+    setConversationName(name);
   };
 
   const clearConversations = useCallback(() => {
     clearHistory();
+
     setMessages([]);
     setConversationId("");
     setConversations({});
@@ -154,7 +192,36 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
 
   const clearConversation = () => {
     setMessages([]);
+    setSystemMessage(defaultContext.systemMessage);
     setConversationId("");
+  };
+
+  const deleteConversation = (id: string) => {
+    deleteConversationFromHistory(id);
+    setConversations((prev) => {
+      const { [id]: _, ...rest } = prev;
+      return rest;
+    });
+
+    if (id === conversationId) clearConversation();
+  };
+
+  const updateConversationName = (id: string, name: string) => {
+    setConversations((prev) => {
+      const conversation = prev[id];
+      if (!conversation) return prev;
+      return {
+        ...prev,
+        [id]: {
+          ...conversation,
+          name,
+        },
+      };
+    });
+
+    if (id === conversationId) setConversationName(name);
+
+    updateConversation(id, { name });
   };
 
   const submit = useCallback(
@@ -184,12 +251,19 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
         });
 
         if (!body) return;
-        if (!ok)
-          throw new Error(
-            "Failed to fetch completion. Please check your API key and try again. Additionally, you may be seeing this error because you do not have access to GPT-4."
-          );
-
         const reader = body.getReader();
+
+        if (!ok) {
+          // Get the error message from the response body
+          const { value } = await reader.read();
+          const chunkValue = decoder.decode(value);
+          const { error } = JSON.parse(chunkValue);
+
+          throw new Error(
+            error?.message ||
+              "Failed to fetch response, check your API key and try again."
+          );
+        }
 
         let done = false;
 
@@ -231,18 +305,17 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
   );
 
   const addMessage = useCallback(
-    (content: string = "", submit_: boolean = false) => {
+    (
+      content: string = "",
+      submit_: boolean = false,
+      role: "user" | "assistant" = "user"
+    ) => {
       setMessages((prev) => {
         const messages = [
           ...prev,
           {
             id: prev.length,
-            role:
-              prev.length > 0
-                ? prev[prev.length - 1].role === "user"
-                  ? "assistant"
-                  : "user"
-                : "user",
+            role,
             content: content || "",
           } as OpenAIChatMessage,
         ];
@@ -263,10 +336,13 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
       addMessage,
       removeMessage,
       conversationId,
+      conversationName,
+      updateConversationName,
+      deleteConversation,
       loadConversation,
       clearConversation,
-      clearConversations,
       conversations,
+      clearConversations,
       toggleMessageRole,
       updateMessageContent,
       updateConfig,
@@ -282,8 +358,8 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
       submit,
       conversationId,
       conversations,
-      error,
       clearConversations,
+      error,
     ]
   );
 

@@ -16,6 +16,7 @@ export default async function handler(
   res: NextApiResponse<Response>
 ) {
   const {
+    model,
     max_tokens,
     temperature,
     top_p,
@@ -34,6 +35,7 @@ export default async function handler(
   }
 
   const config = {
+    model: model || defaultConfig.model,
     max_tokens: max_tokens || defaultConfig.max_tokens,
     temperature: temperature || defaultConfig.temperature,
     top_p: top_p || defaultConfig.top_p,
@@ -44,11 +46,16 @@ export default async function handler(
   };
 
   const payload: OpenAIRequest = {
-    model: "gpt-4",
     ...config,
     messages,
   };
 
-  const stream = await getOpenAICompletion(token, payload);
-  return new Response(stream);
+  try {
+    const stream = await getOpenAICompletion(token, payload);
+    return new Response(stream);
+  } catch (e: any) {
+    return new Response(e.message || "Error fetching response.", {
+      status: 500,
+    });
+  }
 }

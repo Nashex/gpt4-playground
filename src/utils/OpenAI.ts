@@ -10,6 +10,11 @@ export interface OpenAIChatMessage {
   content: string;
 }
 
+export interface OpenAISystemMessage {
+  role: "system";
+  content: string;
+}
+
 export interface OpenAIConfig {
   model: string;
   temperature?: number;
@@ -47,6 +52,11 @@ export const getOpenAICompletion = async (
     method: "POST",
     body: JSON.stringify(payload),
   });
+
+  // Check for errors
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
 
   let counter = 0;
   const stream = new ReadableStream({

@@ -2,6 +2,7 @@ import { useOpenAI } from "@/context/OpenAIProvider";
 import { OpenAIChatMessage } from "@/utils/OpenAI";
 import React from "react";
 import { MdOutlineCancel } from "react-icons/md";
+import { usePlayground } from "@/context/PlaygroundProvider";
 
 type Props = {
   message: OpenAIChatMessage;
@@ -10,8 +11,8 @@ type Props = {
 export default function PlaygroundMessage({
   message: { id, role, content },
 }: Props) {
+  const { showConversations } = usePlayground();
   const [focus, setFocus] = React.useState(false);
-  const [hover, setHover] = React.useState(false);
   const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
   const { updateMessageContent, removeMessage, toggleMessageRole } =
@@ -28,11 +29,20 @@ export default function PlaygroundMessage({
   };
 
   React.useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = "40px";
-      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
-    }
-  }, [content]);
+    const resize = () => {
+      if (textAreaRef.current) {
+        textAreaRef.current.style.height = "40px";
+        textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+      }
+    };
+
+    resize();
+
+    // Handle the 300ms delay on showing the conversation
+    const timeout = setTimeout(() => {
+      resize();
+    }, 300);
+  }, [content, showConversations]);
 
   const handleRemove = () => {
     if (id === undefined) return;
@@ -46,22 +56,18 @@ export default function PlaygroundMessage({
     toggleMessageRole(id);
   };
 
-  const highlight = focus || hover;
-
   return (
     <div
-      className={`flex cursor-pointer flex-row items-center border-b border-gray-300 p-4 transition-all ${
-        highlight && "bg-gray-100"
+      className={`group flex cursor-pointer flex-row items-center border-b border-gray-300 p-4 transition-all hover:bg-gray-100 ${
+        focus && "bg-gray-100"
       }`}
       onFocus={() => setFocus(true)}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
       onBlur={() => setFocus(false)}
     >
       <div className="basis-3/12">
         <button
-          className={`select-none rounded p-2 text-sm font-semibold text-gray-700 transition-all ${
-            highlight && "bg-gray-300"
+          className={`select-none rounded p-2 text-sm font-semibold text-gray-700 transition-all group-hover:bg-gray-100 ${
+            focus && "bg-gray-300"
           }`}
           onClick={handleToggleRole}
         >
@@ -80,9 +86,7 @@ export default function PlaygroundMessage({
 
       <div className="flex basis-1/12 justify-center">
         <button
-          className={`focus:outline-none ${
-            highlight ? "text-gray-300" : "text-transparent"
-          } transition-all hover:text-gray-700`}
+          className={`hover-group:text-gray-300 text-transparent transition-all focus:outline-none hover:text-gray-700`}
           onClick={handleRemove}
         >
           <MdOutlineCancel size={24} />

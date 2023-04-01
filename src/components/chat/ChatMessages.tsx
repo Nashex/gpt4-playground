@@ -9,13 +9,49 @@ type Props = {};
 export default function ChatMessages({}: Props) {
   const { messages, submit } = useOpenAI();
   const messageContainer = React.useRef<HTMLDivElement>(null);
+  const [scrolling, setScrolling] = React.useState(false);
+  const [prevMessageLength, setPrevMessageLength] = React.useState(0);
+
+  // Scroll handling for auto scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (messageContainer.current) {
+        if (
+          messageContainer.current.scrollTop <
+          messageContainer.current.scrollHeight -
+            messageContainer.current.offsetHeight
+        ) {
+          setScrolling(true);
+        } else {
+          setScrolling(false);
+        }
+      }
+    };
+
+    if (messageContainer.current) {
+      messageContainer.current.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (messageContainer.current) {
+        messageContainer.current.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
 
   useEffect(() => {
-    if (messageContainer.current) {
+    if (messages.length != prevMessageLength) {
+      setPrevMessageLength(messages.length);
+    }
+
+    if (
+      messageContainer.current &&
+      (!scrolling || messages.length != prevMessageLength)
+    ) {
       messageContainer.current.scrollTop =
         messageContainer.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, scrolling]);
 
   // Command Enter to submit
   useEffect(() => {
@@ -35,7 +71,7 @@ export default function ChatMessages({}: Props) {
   return (
     <div className="flex h-full w-full flex-col items-stretch md:pl-[260px]">
       <div
-        className="relative flex flex-1 flex-col overflow-auto border-b bg-tertiary pb-[10rem]"
+        className="relative flex flex-1 flex-col overflow-auto border-b bg-tertiary pb-[10rem] scrollbar scrollbar-w-3 scrollbar-thumb-[rgb(var(--bg-primary))] scrollbar-track-[rgb(var(--bg-secondary))] scrollbar-thumb-rounded-full"
         ref={messageContainer}
       >
         {messages.length === 0 ? (
