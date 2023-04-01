@@ -3,10 +3,10 @@ import React from "react";
 import { MdClose, MdToken } from "react-icons/md";
 
 type Props = {
-  buttonClassName?: string;
+  className?: string;
 };
 
-export default function AddTokenModal({ buttonClassName }: Props) {
+export default function AddTokenModal({ className }: Props) {
   const { token, addToken, clearToken } = useAuth();
   const [open, setOpen] = React.useState(false);
   const [input, setInput] = React.useState(token);
@@ -29,13 +29,13 @@ export default function AddTokenModal({ buttonClassName }: Props) {
   return (
     <>
       <button
-        className={`hidden rounded bg-green-500 p-4 text-white hover:bg-green-600 md:block ${buttonClassName}`}
+        className={`hidden rounded bg-green-500 p-4 text-white hover:bg-green-600 md:block ${className}`}
         onClick={() => setOpen(true)}
       >
         Add your API token
       </button>
       <button
-        className={`flex items-center gap-x-1 rounded bg-green-500 p-4 text-white hover:bg-green-600 md:hidden ${buttonClassName}`}
+        className={`flex items-center gap-x-1 rounded bg-green-500 p-4 text-white hover:bg-green-600 md:hidden ${className}`}
         onClick={() => setOpen(true)}
       >
         <MdToken /> Api Key

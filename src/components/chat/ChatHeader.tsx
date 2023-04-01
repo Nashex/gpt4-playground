@@ -16,7 +16,7 @@ export default function ChatHeader({}: Props) {
           <MdMenu />
         </button>
 
-        <AddTokenModal buttonClassName="text-sm p-1 m-2 px-2" />
+        <AddTokenModal className="text-sm p-1 m-2 px-2" />
       </div>
       {/* Animate slide in from left */}
       <Transition
