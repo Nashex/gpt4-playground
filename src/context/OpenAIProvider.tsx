@@ -213,12 +213,18 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
         });
 
         if (!body) return;
-        if (!ok)
-          throw new Error(
-            "Failed to fetch completion. Please check your API key and try again. Additionally, you may be seeing this error because you do not have access to GPT-4."
-          );
-
         const reader = body.getReader();
+
+        if (!ok) {
+          // Get the error message from the response body
+          const { value } = await reader.read();
+          const chunkValue = decoder.decode(value);
+          const { error } = JSON.parse(chunkValue);
+
+          throw new Error(
+            error?.message || "Failed to fetch response, check your API key and try again."
+          );
+        }
 
         let done = false;
 

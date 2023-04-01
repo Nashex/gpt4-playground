@@ -53,6 +53,11 @@ export const getOpenAICompletion = async (
     body: JSON.stringify(payload),
   });
 
+  // Check for errors
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+
   let counter = 0;
   const stream = new ReadableStream({
     async start(controller) {
