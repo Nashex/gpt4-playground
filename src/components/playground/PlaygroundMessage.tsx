@@ -86,7 +86,7 @@ export default function PlaygroundMessage({
 
       <div className="flex basis-1/12 justify-center">
         <button
-          className={`hover-group:text-gray-300 text-transparent transition-all focus:outline-none hover:text-gray-700`}
+          className={`group-hover:text-gray-300 text-transparent transition-all focus:outline-none hover:text-gray-700`}
           onClick={handleRemove}
         >
           <MdOutlineCancel size={24} />
