@@ -1,19 +1,17 @@
 # GPT-4 Playground
 
-This project is a playground for [GPT-4](https://openai.com/blog/openai-api/), a large-scale unsupervised language model. It is built with [Next.js](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), and [React](https://reactjs.org/). 
+Just got your GPT-4 API Key and want to give it a spin? Look not further! This project is mainly targeted to allow you to test out your Open AI API keys. The current OpenAI Playground still only allows 4096 tokens for 8k or 32k models like GPT-4 and if you would like to test out you key in a rendered chat environment you would have to purchase ChatCPT Plus. This project should fix both of those issues without comprimising on either experience. The project aims to preserve as much of the vanilla experience as possible while also providing a link between the the playground and ChatGPT to enable a better developer experience.
 
-This project allows you to use your API key in a mock ChatGPT environment...this is especially useful for testing out your GPT-4 API key! Additionally, there is a playground environment that allows you to test out your API key with a variety of parameters including increasing your token limit to 31,768 (if you have gotten off of the waitlist).
-
-All API keys are stored in your browser's local storage, so you can use this project without having to worry about your API key being stolen.
+As a side note, all API keys are encrypted and stored in your browser's local storage, so you can use this project without having to worry about your API key being stolen.
 
 ## Demo
 
 ### Mock ChatGPT Environment
 This environment has most of the critical features like conversation history (which is stored locally), prompting, and multiple conversations. This environment is a great way to test out your API key and see how it works!
-![ChatGpt-4 ChatGPT](https://i.imgur.com/ihZPFOJ.png)
+![ChatGpt-4 ChatGPT](https://i.imgur.com/DfTbV9d.png)
 
 ### Playground Environment
-![ChatGpt-4 Playground](https://i.imgur.com/goiMoCe.png)
+![ChatGpt-4 Playground](https://i.imgur.com/DS6NPH2.png)
 
 ## Running Locally
 To run this project locally, you will need to have [Node.js](https://nodejs.org/en/) installed. Once you have Node.js installed, you can clone this repository and run the following commands:
