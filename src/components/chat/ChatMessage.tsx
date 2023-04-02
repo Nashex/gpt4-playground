@@ -20,9 +20,9 @@ export default function ChatMessage({ message: { id, role, content } }: Props) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <div className="relative max-w-screen mx-auto flex w-full max-w-4xl flex-row">
+      <div className="relative max-w-screen mx-auto flex w-full max-w-4xl flex-row items-center">
         <div
-          className={`flex sticky top-0 my-4 h-10 w-10 items-center justify-center text-4xl mr-2 transition-colors ${
+          className={`flex sticky top-0 my-4 h-10 w-10 items-center justify-center text-4xl mr-2 self-start transition-colors ${
             hover ? "text-stone-300" : "text-primary/20"
           }`}
         >
