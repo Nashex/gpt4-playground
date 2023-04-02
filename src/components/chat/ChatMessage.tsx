@@ -20,32 +20,22 @@ export default function ChatMessage({ message: { id, role, content } }: Props) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <div className="mx-auto flex w-full max-w-4xl overflow-x-auto flex-row justify-center items-center">
+      <div className="relative max-w-screen mx-auto flex w-full max-w-4xl flex-row items-center">
         <div
-          className={`flex h-10 w-10 items-center justify-center text-4xl transition-colors ${
+          className={`flex sticky top-0 my-4 h-10 w-10 items-center justify-center text-4xl mr-2 self-start transition-colors ${
             hover ? "text-stone-300" : "text-primary/20"
           }`}
         >
           {role === "user" ? <MdPerson /> : <MdSmartToy />}
         </div>
-        <div className="basis-10/12 items-center">
-          <div className="text-md prose max-w-4xl w-full rounded p-4 text-primary dark:prose-invert prose-code:text-primary prose-pre:bg-transparent prose-pre:p-0">
+        <div className="overflow-x-auto">
+          <div className="text-md prose w-full max-w-4xl rounded p-4 text-primary dark:prose-invert prose-code:text-primary prose-pre:bg-transparent prose-pre:p-0">
             {role === "user" ? (
               <UserMessageContent content={content} />
             ) : (
               <AssistantMessageContent content={content} />
             )}
           </div>
-        </div>
-
-        <div className="flex basis-2/12 justify-center">
-          <button
-            className={`focus:outline-none ${
-              hover ? "text-stone-300" : "text-transparent"
-            } transition-all hover:text-stone-500`}
-          >
-            {/* <MdEdit size={24} /> */}
-          </button>
         </div>
       </div>
     </div>

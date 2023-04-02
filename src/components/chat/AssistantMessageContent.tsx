@@ -52,6 +52,14 @@ export default function AssistantMessageContent({ content, ...props }: Props) {
       );
     },
 
+    pre: ({ node, inline, className, children, ...props }: any) => {
+      return (
+        <pre className={`m-0 ${className || ""}`} {...props}>
+          {children}
+        </pre>
+      );
+    },
+
     math: (props: any) => <MathJax.Node formula={props.value} />,
     inlineMath: (props: any) => <MathJax.Node inline formula={props.value} />,
 
@@ -101,6 +109,7 @@ export default function AssistantMessageContent({ content, ...props }: Props) {
       remarkPlugins={[remarkMath]}
       rehypePlugins={[rehypeKatex]}
       components={MarkdownComponents}
+      {...props}
     >
       {content}
     </ReactMarkdown>
