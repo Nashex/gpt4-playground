@@ -12,14 +12,18 @@ export default function PlaygroundMessages({}: Props) {
   const { messages, loading, submit } = useOpenAI();
   const messageContainer = React.useRef<HTMLDivElement>(null);
   const [prevMessageLength, setPrevMessageLength] = React.useState(0);
+  const [scrolling, setScrolling] = React.useState(false);
 
   useEffect(() => {
-    if (messages.length > prevMessageLength) {
+    if (messages.length != prevMessageLength) {
       setPrevMessageLength(messages.length);
     }
-    if (prevMessageLength != messages.length && messageContainer.current) {
-      messageContainer.current.scrollTop =
-        messageContainer.current.scrollHeight;
+
+    if (
+        messageContainer.current &&
+        (!scrolling || messages.length != prevMessageLength)
+    ) {
+      messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
     }
   }, [messages]);
 
@@ -37,6 +41,33 @@ export default function PlaygroundMessages({}: Props) {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [submit]);
+
+// Scroll handling for auto scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (messageContainer.current) {
+        if (
+            messageContainer.current.scrollTop <
+            messageContainer.current.scrollHeight -
+            messageContainer.current.offsetHeight
+        ) {
+          setScrolling(true);
+        } else {
+          setScrolling(false);
+        }
+      }
+    };
+
+    if (messageContainer.current) {
+      messageContainer.current.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (messageContainer.current) {
+        messageContainer.current.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
 
   return (
     <div className="flex grow flex-col justify-between md:grow">
