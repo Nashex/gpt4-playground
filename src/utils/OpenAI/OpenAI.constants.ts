@@ -31,4 +31,19 @@ export const OpenAIChatModels: Record<string, OpenAIModel> = {
     name: "GPT-3.5 Turbo (03/01)",
     maxLimit: 4096,
   },
+  "gpt-3.5-turbo-0613": {
+    id: "gpt-3.5-turbo-0613",
+    name: "GPT-3.5 Turbo (06/13)",
+    maxLimit: 4096,
+  },
+  "gpt-3.5-turbo-16k": {
+    id: "gpt-3.5-turbo-16k",
+    name: "GPT-3.5 Turbo (16k)",
+    maxLimit: 16384,
+  },
+  "gpt-3.5-turbo-16k-0613": {
+    id: "gpt-3.5-turbo-16k-0613",
+    name: "GPT-3.5 Turbo (16k, 06/13) ",
+    maxLimit: 16384,
+  },
 };
