@@ -37,7 +37,7 @@ export const OpenAIChatModels: Record<string, OpenAIModel> = {
     maxLimit: 4096,
   },
   "gpt-3.5-turbo-16k": {
-    id: "gpt-3.5-turbo",
+    id: "gpt-3.5-turbo-16k",
     name: "GPT-3.5 Turbo (16k)",
     maxLimit: 16384,
   },
