@@ -1,30 +1,30 @@
 import React from "react";
 import { MdColorLens } from "react-icons/md";
 import ButtonContainer from "./ButtonContainer";
+import { useTheme } from "next-themes";
 
 type Props = {};
 
 export default function ThemeButton({}: Props) {
-  const [dark, setDark] = React.useState(false);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
 
-  React.useEffect(() => {
-    if (localStorage.theme === "dark") {
-      setDark(true);
-    } else {
-      setDark(false);
-    }
-  }, []);
+  React.useEffect(() => setMounted(true), []);
 
   const handleThemeChange = () => {
-    document.documentElement.classList.toggle("dark");
-    localStorage.theme = localStorage.theme === "dark" ? "light" : "dark";
-    setDark(!dark);
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
   };
+
+  if (!mounted) return null;
 
   return (
     <ButtonContainer onClick={handleThemeChange}>
       <MdColorLens />
-      {dark ? "Light" : "Dark"} mode
+      {`${theme === "dark" ? "Light" : "Dark"} mode`}
     </ButtonContainer>
   );
 }
