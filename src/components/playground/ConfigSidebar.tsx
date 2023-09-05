@@ -46,13 +46,13 @@ export default function ConfigSidebar({}: Props) {
         range={[-1, OpenAIChatModels[config.model].maxLimit || 8192]}
         step={1}
         value={config.max_tokens as number}
-        onChange={(value: OpenAIConfig["max_tokens"]) =>
+        onChange={(value: OpenAIConfig["max_tokens"]) => {
           if (value === -1) {
             handleUpdateConfig("max_tokens", undefined)
           } else {
             handleUpdateConfig("max_tokens", value)
           }
-        }
+        }}
       />
       <Slider
         label="top p"
