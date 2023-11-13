@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import ChatInput from "./ChatInput";
 import ChatMessage from "./ChatMessage";
 import ChatPlaceholder from "./ChatPlaceholder";
+import { useAuth } from "@/context/AuthProvider";
 
 type Props = {};
 
@@ -11,6 +12,7 @@ export default function ChatMessages({}: Props) {
   const messageContainer = React.useRef<HTMLDivElement>(null);
   const [scrolling, setScrolling] = React.useState(false);
   const [prevMessageLength, setPrevMessageLength] = React.useState(0);
+  const {token} = useAuth()
 
   // Scroll handling for auto scroll
   useEffect(() => {
@@ -85,7 +87,8 @@ export default function ChatMessages({}: Props) {
           </>
         )}
       </div>
-      <ChatInput />
+      {!token ? null :  <ChatInput /> }
+
     </div>
   );
 }

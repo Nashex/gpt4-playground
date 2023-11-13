@@ -4,13 +4,15 @@ import Head from "next/head";
 import React, { useEffect } from "react";
 import { useOpenAI } from "@/context/OpenAIProvider";
 import ChatHeader from "@/components/chat/ChatHeader";
+import { useAuth } from "@/context/AuthProvider";
 
 export default function Chat() {
   const { clearConversation } = useOpenAI();
 
   useEffect(() => {
     clearConversation();
-  }, []);
+
+}, []);
 
   return (
     <React.Fragment>
