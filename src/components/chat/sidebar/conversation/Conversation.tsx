@@ -74,11 +74,14 @@ export default function Conversation({ id, conversation, active }: Props) {
           conversation.name || conversation.messages[0].content
         )}
         <div
-          className={`absolute bottom-0  right-0 z-10 h-full w-24 bg-gradient-to-r from-transparent ${
-            active
-              ? "to-[rgb(var(--bg-secondary))]"
-              : "to-[rgb(var(--bg-primary))] group-hover:to-[rgb(var(--bg-secondary))]"
-          }`}
+          className={`absolute bottom-0  right-0 z-10 h-full w-24 bg-gradient-to-r from-transparent
+          `
+        }
+        //   ${
+        //     active
+        //       ? "to-[rgb(var(--bg-secondary))]"
+        //       : "to-[rgb(var(--bg-primary))] group-hover:to-[rgb(var(--bg-secondary))]"
+        //   }
         />
       </div>
 

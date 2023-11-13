@@ -8,6 +8,7 @@ import ButtonContainer from "./buttons/ButtonContainer";
 import Conversations from "./conversation/Conversations";
 import ApiKey from "./buttons/ApiKey";
 import CurrentModel from './buttons/CurrentModel';
+import JulepLogo from "@/components/misc/Julep";
 
 type Props = {};
 
@@ -17,9 +18,12 @@ export default function ChatSidebar({}: Props) {
   return (
     <div className="dark left-0 top-0 h-full max-h-screen flex-col bg-gray-900 text-primary md:fixed md:flex md:w-[260px]">
       <div className="flex h-full flex-col items-stretch p-2">
+        <Link href="/">
+            <JulepLogo className="w-40 h-20" />
+        </Link>
         <Link
           href="/"
-          className="flex items-center gap-3 rounded border border-white/20 p-4 transition-colors hover:bg-gray-500/10"
+          className="flex items-center gap-3 rounded-full border border-white/20 p-4 transition-colors hover:bg-gray-500/10"
         >
           <MdAdd />
           New chat
@@ -44,7 +48,7 @@ export default function ChatSidebar({}: Props) {
             Clear Conversations
           </ButtonContainer>
 
-          <ThemeButton />
+          {/* <ThemeButton /> */}
         </div>
       </div>
     </div>

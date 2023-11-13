@@ -6,13 +6,14 @@ import PlaygroundHeader from "@/components/playground/PlaygroundHeader";
 import SystemMessage from "@/components/playground/SystemMessage";
 import PlaygroundConversations from "@/components/playground/conversations/PlaygroundConversations";
 import PlaygroundProvider from "@/context/PlaygroundProvider";
+import ChatSidebar from "@/components/chat/sidebar/ChatSidebar";
 
 export default function Playground() {
   return (
     <React.Fragment>
       <Head>
-        <title>OpenAI Playground</title>
-        <meta name="description" content="A clone of OpenAI playground." />
+        <title>JulepAI Playground</title>
+        <meta name="description" content="JulepAI playground." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

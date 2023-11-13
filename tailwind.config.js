@@ -2,42 +2,42 @@ const generateColorClass = (variable) => {
   return ({ opacityValue }) =>
     opacityValue
       ? `rgba(var(--${variable}), ${opacityValue})`
-      : `rgb(var(--${variable}))`
-}
+      : `rgb(var(--${variable}))`;
+};
 
 const textColor = {
-  primary: generateColorClass('text-primary'),
-}
+  primary: generateColorClass("text-primary"),
+};
 
 const backgroundColor = {
-  primary: generateColorClass('bg-primary'),
-  secondary: generateColorClass('bg-secondary'),
-  tertiary: generateColorClass('bg-tertiary'),
-}
+  primary: generateColorClass("bg-primary"),
+  secondary: generateColorClass("bg-secondary"),
+  tertiary: generateColorClass("bg-tertiary"),
+};
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       textColor,
       backgroundColor,
       colors: {
-        primary: generateColorClass('primary'),
+        primary: generateColorClass("primary"),
         bg: {
-          ...backgroundColor
+          ...backgroundColor,
         },
         text: {
-          ...textColor
+          ...textColor,
         },
       },
     },
+    fontFamily: {
+      nanum: ["Nanum Myeongjo", "sans-serif"],
+    },
   },
   plugins: [
-    require('tailwind-scrollbar')({ nocompatible: true }),
-    require('@tailwindcss/typography'),
+    require("tailwind-scrollbar")({ nocompatible: true }),
+    require("@tailwindcss/typography"),
   ],
-}
-
+};
