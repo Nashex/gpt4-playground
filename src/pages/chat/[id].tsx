@@ -31,7 +31,7 @@ export default function Chat() {
     <React.Fragment>
       <Head>
         <title>JulepAI</title>
-        <meta name="description" content="A clone of OpenAI playground." />
+        <meta name="description" content="JulepAI Playground." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

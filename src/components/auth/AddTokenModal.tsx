@@ -59,7 +59,7 @@ export default function AddTokenModal({ className }: Props) {
             <p className="mt-4 text-lg text-primary/80">
               You can get your API token from the{" "}
               <a
-                href="https://combative-plant-portal.aws-use1.cloud-ara.tyk.io/auth/password/login"
+                href="https://console.julep.ai"
                 target="_blank"
                 rel="noreferrer"
                 className="text-primary hover:underline"
