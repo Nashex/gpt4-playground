@@ -6,7 +6,6 @@ import PlaygroundHeader from "@/components/playground/PlaygroundHeader";
 import SystemMessage from "@/components/playground/SystemMessage";
 import PlaygroundConversations from "@/components/playground/conversations/PlaygroundConversations";
 import PlaygroundProvider from "@/context/PlaygroundProvider";
-import ChatSidebar from "@/components/chat/sidebar/ChatSidebar";
 
 export default function Playground() {
   return (

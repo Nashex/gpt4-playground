@@ -28,14 +28,16 @@ export default function AddTokenModal({ className }: Props) {
 
   return (
     <>
+      {!token && (
+        <button
+          className={`hidden rounded-full bg-green-500 p-4 text-white hover:bg-green-600 md:block ${className}`}
+          onClick={() => setOpen(true)}
+        >
+          Add your API token
+        </button>
+      )}
       <button
-        className={`hidden rounded bg-green-500 p-4 text-white hover:bg-green-600 md:block ${className}`}
-        onClick={() => setOpen(true)}
-      >
-        Add your API token
-      </button>
-      <button
-        className={`flex items-center gap-x-1 rounded bg-green-500 p-4 text-white hover:bg-green-600 md:hidden ${className}`}
+        className={`flex items-center gap-x-1 rounded-full bg-green-500 p-4 text-white hover:bg-green-600 md:hidden ${className}`}
         onClick={() => setOpen(true)}
       >
         <MdToken /> Api Key
@@ -57,7 +59,7 @@ export default function AddTokenModal({ className }: Props) {
             <p className="mt-4 text-lg text-primary/80">
               You can get your API token from the{" "}
               <a
-                href="https://beta.openai.com/account/api-keys"
+                href="https://combative-plant-portal.aws-use1.cloud-ara.tyk.io/auth/password/login"
                 target="_blank"
                 rel="noreferrer"
                 className="text-primary hover:underline"
@@ -70,7 +72,7 @@ export default function AddTokenModal({ className }: Props) {
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
-                placeholder="sk-NhU98cac878..."
+                placeholder="NhU98cac878..."
                 className="mt-4 w-full rounded border-none bg-secondary p-4 text-primary outline-none"
                 onChange={handleInput}
                 value={input}
@@ -85,7 +87,7 @@ export default function AddTokenModal({ className }: Props) {
                 </button>
                 <button
                   type="submit"
-                  className="rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+                  className="rounded-full bg-green-500 px-4 py-2 text-white hover:bg-green-600"
                 >
                   Add
                 </button>

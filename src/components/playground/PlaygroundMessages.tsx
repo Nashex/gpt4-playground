@@ -83,7 +83,7 @@ export default function PlaygroundMessages({}: Props) {
 
       <div className="flex gap-3 bg-white p-4">
         <button
-          className="w-[80px] rounded bg-green-500 p-2 text-white hover:bg-green-600"
+          className="w-[80px] rounded-full bg-green-500 p-2 text-white hover:bg-green-600"
           onClick={submit}
         >
           {loading ? (
