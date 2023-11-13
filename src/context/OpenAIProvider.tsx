@@ -23,6 +23,7 @@ const CHAT_ROUTE = "/";
 const defaultContext = {
   systemMessage: {
     role: "system",
+    name: "situation",
     content: "You are a helpful AI chatbot.",
   } as OpenAISystemMessage,
   messages: [] as OpenAIChatMessage[],
@@ -99,9 +100,12 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
   const updateSystemMessage = (content: string) => {
     setSystemMessage({
       role: "system",
+      name: "situation",
       content,
     });
   };
+
+
 
   const removeMessage = (id: number) => {
     setMessages((prev) => {
@@ -242,6 +246,9 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
 
       messages_ = messages_.length ? messages_ : messages;
 
+      console.log('messages_', messages_)
+
+
       try {
         const decoder = new TextDecoder();
         const { body, ok } = await fetch("/api/completion", {
@@ -253,9 +260,10 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
           body: JSON.stringify({
             ...config,
             messages: [systemMessage, ...messages_].map(
-              ({ role, content }) => ({
+              ({ role, content, name }) => ({
                 role,
                 content,
+                name
               })
             ),
           }),

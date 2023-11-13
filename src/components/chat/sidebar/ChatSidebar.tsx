@@ -46,11 +46,6 @@ export default function ChatSidebar({}: Props) {
 
           <ThemeButton />
         </div>
-
-        <Github />
-        <span className="text-center text-primary/80">
-          Made with ❤️ by Nashex
-        </span>
       </div>
     </div>
   );

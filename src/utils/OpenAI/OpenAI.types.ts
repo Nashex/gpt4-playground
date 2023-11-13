@@ -4,10 +4,12 @@ export interface OpenAIChatMessage {
   id?: number;
   role: "system" | "assistant" | "user";
   content: string;
+  name?: string;
 }
 
 export interface OpenAISystemMessage {
   role: "system";
+  name: string;
   content: string;
 }
 
