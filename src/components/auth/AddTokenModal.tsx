@@ -62,19 +62,10 @@ export default function AddTokenModal({ className }: Props) {
                 rel="noreferrer"
                 className="text-primary hover:underline"
               >
-                OpenAI dashboard
+                JulepAI dashboard
               </a>
               . All requests are made on the client side, so your token is never
-              sent to the server. If you would like more information look at the{" "}
-              <a
-                href="https://github.com/Nashex/gpt4-playground"
-                target="_blank"
-                rel="noreferrer"
-                className="text-primary hover:underline"
-              >
-                Github Repository
-              </a>
-              !
+              sent to the server.
             </p>
             <form onSubmit={handleSubmit}>
               <input
