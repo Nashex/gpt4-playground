@@ -11,7 +11,7 @@ export default function Playground() {
   return (
     <React.Fragment>
       <Head>
-        <title>JulepAI Playground</title>
+        <title>Playground - JulepAI</title>
         <meta name="description" content="JulepAI playground." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

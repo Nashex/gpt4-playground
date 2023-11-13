@@ -17,8 +17,8 @@ export default function Chat() {
   return (
     <React.Fragment>
       <Head>
-        <title>JulepAI</title>
-        <meta name="description" content="JulepAI Playground." />
+        <title>Playground - JulepAI</title>
+        <meta name="description" content="Playground to test the latest models from JulepAI" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
