@@ -13,7 +13,7 @@ export default function ConfigSidebar({}: Props) {
 
   const handleUpdateConfig = <K extends keyof OpenAIConfig>(
     id: K,
-    value: OpenAIConfig[K] | undefined
+    value: OpenAIConfig[K] | boolean | undefined
   ) => {
     updateConfig({
       [id]: value,
@@ -77,6 +77,70 @@ export default function ConfigSidebar({}: Props) {
           handleUpdateConfig("presence_penalty", value)
         }
       />
+      <div className="flex flex-col items-stretch">
+        <div className="flex flex-row items-center justify-between py-1">
+          <label
+            htmlFor="ignore_eos"
+            className="flex basis-9/12 select-none text-xs font-medium uppercase text-gray-700"
+          >
+            Ignore EOS
+          </label>
+          <input
+            name="ignore_eos"
+            id="ignore_eos"
+            type="checkbox"
+            checked={config.ignore_eos}
+            onChange={() =>
+              handleUpdateConfig("ignore_eos", !config.ignore_eos)
+            }
+            className="text-md rounded px-1 text-right text-gray-700 focus:outline focus:outline-blue-500"
+          />
+        </div>
+      </div>
+      <div className="flex flex-col items-stretch">
+        <div className="flex flex-row items-center justify-between py-1">
+          <label
+            htmlFor="skip_special_tokens"
+            className="flex basis-9/12 select-none text-xs font-medium uppercase text-gray-700"
+          >
+            Skip Special Tokens
+          </label>
+          <input
+            name="skip_special_tokens"
+            id="skip_special_tokens"
+            type="checkbox"
+            checked={config.skip_special_tokens}
+            onChange={() =>
+              handleUpdateConfig(
+                "skip_special_tokens",
+                !config.skip_special_tokens
+              )
+            }
+            className="text-md rounded px-1 text-right text-gray-700 focus:outline focus:outline-blue-500"
+          />
+        </div>
+      </div>
+      <div className="flex flex-col items-stretch">
+        <label
+          htmlFor="stop"
+          className="flex basis-9/12 select-none text-xs font-medium uppercase text-gray-700"
+        >
+          Stop
+        </label>
+        <input
+          name="stop"
+          id="stop"
+          type="text"
+          value={config.stop}
+          onChange={(e) =>
+            handleUpdateConfig(
+              "stop",
+              e.target.value === "" ? [] : e.target.value.split(",")
+            )
+          }
+          className="mt-1 text-md rounded border-gray-300 border px-1 text-right text-gray-700 focus:outline focus:outline-blue-500"
+        />
+      </div>
     </div>
   );
 }

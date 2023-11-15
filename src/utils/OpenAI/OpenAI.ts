@@ -7,11 +7,14 @@ import {
 
 export const defaultConfig = {
   model: "julep-ai/samantha-1-turbo",
-  temperature: 0.5,
-  max_tokens: 2048,
+  temperature: 0.7,
+  max_tokens: 800,
   top_p: 1,
   frequency_penalty: 0,
-  presence_penalty: 0.6,
+  presence_penalty: 0.0,
+  ignore_eos: false,
+  skip_special_tokens: false,
+  stop: ["<", "<|"],
 };
 
 export type OpenAIRequest = {
@@ -53,10 +56,13 @@ export const getOpenAICompletion = async (
 
           try {
             const json = JSON.parse(data);
-            const text = json.choices[0].delta?.content || "";
-            if (counter < 2 && (text.match(/\n/) || []).length) {
-              return;
-            }
+
+            const delta = json.choices[0].delta;
+            // if (counter < 2 && (text.match(/\n/) || []).length) {
+            //   return;
+            // }
+
+            const text = JSON.stringify(delta)
             const queue = encoder.encode(text);
             controller.enqueue(queue);
             counter++;

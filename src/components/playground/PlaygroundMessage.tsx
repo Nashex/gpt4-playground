@@ -1,5 +1,5 @@
 import { useOpenAI } from "@/context/OpenAIProvider";
-import { OpenAIChatMessage } from "@/utils/OpenAI";
+import { JulepAIChatMessageRole, OpenAIChatMessage } from "@/utils/OpenAI";
 import React from "react";
 import { MdOutlineCancel } from "react-icons/md";
 import { usePlayground } from "@/context/PlaygroundProvider";
@@ -8,15 +8,81 @@ type Props = {
   message: OpenAIChatMessage;
 };
 
+function RoleSelect(props: {
+  role: JulepAIChatMessageRole;
+  onChange: (role: JulepAIChatMessageRole) => void;
+}) {
+  return (
+    <select
+      name="role"
+      id="role"
+      value={props.role}
+      className="text-md w-full resize-none rounded bg-transparent p-1 text-gray-700 focus:border-transparent focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600"
+      onChange={(e) => {
+        props.onChange(e.target.value as JulepAIChatMessageRole);
+      }}
+    >
+      <option value="user">User</option>
+      <option value="assistant">Assistant</option>
+      <option value="system">System</option>
+    </select>
+  );
+}
+
+function UserAssistantNameInput(props: {
+  onChange: (name: string) => void;
+  name: string;
+}) {
+  return (
+    <input
+      type="text"
+      className="text-md w-full resize-none rounded bg-transparent p-1 text-gray-700 focus:border-transparent focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600"
+      placeholder="Enter name"
+      value={props.name}
+      onChange={(e) => {
+        props.onChange(e.target.value);
+      }}
+    />
+  );
+}
+
+function SystemNameSelect(props: {
+  onChange: (name: string) => void;
+  name: string;
+}) {
+  return (
+    <select
+      name="name"
+      id="name"
+      className="text-md w-full resize-none rounded bg-transparent p-1 text-gray-700 focus:border-transparent focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600"
+      value={props.name.toLowerCase()}
+      onChange={(e) => {
+        props.onChange(e.target.value);
+      }}
+    >
+      <option value=""></option>
+      <option value="information">Information</option>
+      <option value="thought">Thought</option>
+      <option value="situation">Situation</option>
+      <option value="function_call">System</option>
+      <option value="functions">System</option>
+    </select>
+  );
+}
+
 export default function PlaygroundMessage({
-  message: { id, role, content },
+  message: { id, role, content, name = "" },
 }: Props) {
   const { showConversations } = usePlayground();
   const [focus, setFocus] = React.useState(false);
   const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 
-  const { updateMessageContent, removeMessage, toggleMessageRole } =
-    useOpenAI();
+  const {
+    updateMessageContent,
+    removeMessage,
+    updateMessageRole,
+    updateMessageName,
+  } = useOpenAI();
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value === content || id === undefined) return;
@@ -50,10 +116,16 @@ export default function PlaygroundMessage({
     removeMessage(id);
   };
 
-  const handleToggleRole = () => {
+  const handleUpdateRole = (role: JulepAIChatMessageRole) => {
     if (id === undefined) return;
 
-    toggleMessageRole(id);
+    updateMessageRole(id, role);
+  };
+
+  const handleUpdateName = (name: string) => {
+    if (id === undefined) return;
+
+    updateMessageName(id, name);
   };
 
   return (
@@ -64,15 +136,21 @@ export default function PlaygroundMessage({
       onFocus={() => setFocus(true)}
       onBlur={() => setFocus(false)}
     >
-      <div className="basis-3/12">
-        <button
-          className={`select-none rounded p-2 text-sm font-semibold text-gray-700 transition-all group-hover:bg-gray-100 ${
-            focus && "bg-gray-300"
-          }`}
-          onClick={handleToggleRole}
-        >
-          {role.toUpperCase()}
-        </button>
+      <div className="basis-2/12">
+        <RoleSelect onChange={(role) => handleUpdateRole(role)} role={role} />
+      </div>
+      <div className="basis-2/12">
+        {role === "system" ? (
+          <SystemNameSelect
+            name={name}
+            onChange={(name) => handleUpdateName(name)}
+          />
+        ) : (
+          <UserAssistantNameInput
+            name={name}
+            onChange={(name) => handleUpdateName(name)}
+          />
+        )}
       </div>
       <div className="basis-8/12 items-center">
         <textarea
@@ -86,7 +164,7 @@ export default function PlaygroundMessage({
 
       <div className="flex basis-1/12 justify-center">
         <button
-          className={`group-hover:text-gray-300 text-transparent transition-all focus:outline-none hover:text-gray-700`}
+          className={`text-transparent transition-all group-hover:text-gray-300 hover:text-gray-700 focus:outline-none`}
           onClick={handleRemove}
         >
           <MdOutlineCancel size={24} />

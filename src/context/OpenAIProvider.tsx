@@ -12,7 +12,8 @@ import {
   OpenAIChatMessage,
   OpenAIConfig,
   OpenAISystemMessage,
-  OpenAIChatModels
+  OpenAIChatModels,
+  JulepAIChatMessageRole,
 } from "@/utils/OpenAI";
 import React, { PropsWithChildren, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -39,7 +40,8 @@ const defaultContext = {
   clearConversations: () => {},
   clearConversation: () => {},
   loadConversation: (id: string, conversation: Conversation) => {},
-  toggleMessageRole: (id: number) => {},
+  updateMessageRole: (id: number, role: string) => {},
+  updateMessageName: (id: number, name: string) => {},
   updateMessageContent: (id: number, content: string) => {},
   updateConfig: (newConfig: Partial<OpenAIConfig>) => {},
   submit: () => {},
@@ -55,7 +57,8 @@ const OpenAIContext = React.createContext<{
   addMessage: (
     content?: string,
     submit?: boolean,
-    role?: "user" | "assistant"
+    role?: JulepAIChatMessageRole,
+    name?: string | "situation" | "thought" | "information"
   ) => void;
   removeMessage: (id: number) => void;
   conversationName: string;
@@ -66,7 +69,8 @@ const OpenAIContext = React.createContext<{
   clearConversation: () => void;
   clearConversations: () => void;
   loadConversation: (id: string, conversation: Conversation) => void;
-  toggleMessageRole: (id: number) => void;
+  updateMessageRole: (id: number, role: JulepAIChatMessageRole) => void;
+  updateMessageName: (id: number, name: string) => void;
   updateMessageContent: (id: number, content: string) => void;
   updateConfig: (newConfig: Partial<OpenAIConfig>) => void;
   submit: () => void;
@@ -105,15 +109,13 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
     });
   };
 
-
-
   const removeMessage = (id: number) => {
     setMessages((prev) => {
       return [...prev.filter((message) => message.id !== id)];
     });
   };
 
-  const toggleMessageRole = (id: number) => {
+  const updateMessageRole = (id: number, role: JulepAIChatMessageRole) => {
     setMessages((prev) => {
       const index = prev.findIndex((message) => message.id === id);
       if (index === -1) return prev;
@@ -122,7 +124,23 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
         ...prev.slice(0, index),
         {
           ...message,
-          role: message.role === "user" ? "assistant" : "user",
+          role,
+        },
+        ...prev.slice(index + 1),
+      ];
+    });
+  };
+
+  const updateMessageName = (id: number, name: string) => {
+    setMessages((prev) => {
+      const index = prev.findIndex((message) => message.id === id);
+      if (index === -1) return prev;
+      const message = prev[index];
+      return [
+        ...prev.slice(0, index),
+        {
+          ...message,
+          name,
         },
         ...prev.slice(index + 1),
       ];
@@ -143,7 +161,6 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
         ...newConfig,
       };
     });
-
   };
 
   const updateMessageContent = (id: number, content: string) => {
@@ -246,11 +263,16 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
 
       messages_ = messages_.length ? messages_ : messages;
 
-      console.log('messages_', messages_)
-
-
       try {
         const decoder = new TextDecoder();
+        const messages = [systemMessage, ...messages_].map(
+          ({ role, content, name }) => ({
+            role,
+            content,
+            name,
+          })
+        );
+
         const { body, ok } = await fetch("/api/completion", {
           method: "POST",
           headers: {
@@ -259,13 +281,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
           },
           body: JSON.stringify({
             ...config,
-            messages: [systemMessage, ...messages_].map(
-              ({ role, content, name }) => ({
-                role,
-                content,
-                name
-              })
-            ),
+            messages,
           }),
         });
 
@@ -289,6 +305,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
         const message = {
           id: messages_.length,
           role: "assistant",
+          name: "Julia",
           content: "",
         } as OpenAIChatMessage;
 
@@ -301,8 +318,32 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
           const { value, done: doneReading } = await reader.read();
           done = doneReading;
           const chunkValue = decoder.decode(value);
-          message.content += chunkValue;
+          const jsonArrayString = "[" + chunkValue.replace(/}{/g, "},{") + "]";
 
+          const contentArray = JSON.parse(jsonArrayString);
+
+          const content = contentArray.reduce(
+            (acc: any, curr: any) => {
+              if (curr.role) {
+                acc.role = curr.role;
+              }
+
+              if (curr.content) {
+                acc.content += curr.content;
+              }
+              return acc;
+            },
+            {
+              role: null,
+              content: "",
+            }
+          );
+
+
+
+        //   updateMessageRole(message.id as number, content.role);
+        message.content += content.content
+        // console.log('content', content)
           updateMessageContent(message.id as number, message.content);
         }
       } catch (error: any) {
@@ -312,6 +353,7 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
             {
               id: prev.length,
               role: "assistant",
+              name: "Julia",
               content: error.message,
             },
           ];
@@ -362,7 +404,8 @@ export default function OpenAIProvider({ children }: PropsWithChildren) {
       clearConversation,
       conversations,
       clearConversations,
-      toggleMessageRole,
+      updateMessageRole,
+      updateMessageName,
       updateMessageContent,
       updateConfig,
       submit,

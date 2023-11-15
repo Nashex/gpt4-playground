@@ -1,8 +1,10 @@
 import { OpenAIChatModels } from "./OpenAI.constants";
 
+export type JulepAIChatMessageRole = "system" | "assistant" | "user";
+
 export interface OpenAIChatMessage {
   id?: number;
-  role: "system" | "assistant" | "user";
+  role: JulepAIChatMessageRole;
   content: string;
   name?: string;
 }
@@ -20,6 +22,9 @@ export interface OpenAIConfig {
   top_p?: number;
   frequency_penalty?: number;
   presence_penalty?: number;
+  ignore_eos?: boolean;
+  stop: string[];
+  skip_special_tokens?: boolean;
 }
 
 export interface OpenAIModel {

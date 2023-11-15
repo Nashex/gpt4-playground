@@ -29,7 +29,7 @@ export default function Slider({ label, range, step, value, onChange }: Props) {
   return (
     <div className="flex flex-col items-stretch">
       <div className="flex flex-row items-center justify-between py-1">
-        <div className="flex basis-9/12 text-xs font-medium text-gray-700">
+        <div className="flex basis-9/12 text-xs font-medium text-gray-700 select-none">
           {label.toUpperCase()}
         </div>
         <input
