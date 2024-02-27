@@ -41,7 +41,7 @@ export default function AddTokenModal({ className }: Props) {
         <MdToken /> Api Key
       </button>
       {open && (
-        <div className="absolute left-0 top-0 x flex h-full w-full items-center justify-center bg-black bg-opacity-50 transition-all">
+        <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 transition-all">
           <div className="relative m-4 max-w-2xl rounded bg-tertiary p-4 shadow-xl">
             <div className="absolute right-0 top-0 m-2">
               <button
