@@ -6,6 +6,16 @@ export const OpenAIChatModels: Record<string, OpenAIModel> = {
     name: "GPT-4",
     maxLimit: 8192,
   },
+  "gpt-4-0125-preview": {
+    id: "gpt-4-0125-preview",
+    name: "GPT-4 Turbo Preview",
+    maxLimit: 8192,
+  },
+  "gpt-4-1106-preview": {
+    id: "gpt-4-1106-preview",
+    name: "GPT-4 (11/06)",
+    maxLimit: 8192,
+  },
   "gpt-4-0314": {
     id: "gpt-4-0314",
     name: "GPT-4 (03/14)",
