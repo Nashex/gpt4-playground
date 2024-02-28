@@ -10,7 +10,7 @@
     --bg-tertiary: 209, 213, 219;
   }
 
-  .dark {
+  .dark, [data-theme="dark"] {
     --text-primary: 255, 255, 255;
     --bg-primary: 17, 24, 39;
     --bg-secondary: 31, 41, 55;
