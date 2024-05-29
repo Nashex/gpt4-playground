@@ -1,6 +1,6 @@
 import { OpenAIChatModels } from "@/utils/OpenAI";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { OpenAIApi, Configuration } from "openai";
+import OpenAI from "openai";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,16 +11,12 @@ export default async function handler(
     return res.status(401).json({ error: "Missing token" });
   }
 
-  const configuration = new Configuration({
+  const openAi = new OpenAI({
     apiKey,
-  });
-
-  const openAi = new OpenAIApi(configuration);
+  })
 
   try {
-    const {
-      data: { data },
-    } = await openAi.listModels();
+    const { data } = await openAi.models.list();
 
     // Get the list of models
     const models = data.map(({ id }) => id);

@@ -10,10 +10,11 @@ export default function useModels() {
   const [models, setModels] = React.useState<OpenAIModel[]>([]);
   const [loadingModels, setLoadingModels] = React.useState(false);
 
-  React.useEffect(() => {    
+  React.useEffect(() => {
     if (!token) {
-      return setModels(Object.values(OpenAIChatModels));
-    };
+      setModels(Object.values(OpenAIChatModels));
+      return;
+    }
 
     const fetchModels = async () => {
       setLoadingModels(true);
