@@ -37,7 +37,7 @@ export default function Dropdown({
       </button>
 
       {show && (
-        <div className="absolute bottom-0 right-0 z-[100] flex min-w-full translate-y-[calc(100%+10px)] flex-col items-stretch rounded border border-gray-300 bg-white py-2 shadow">
+        <div className="absolute max-h-64 overflow-y-scroll bottom-0 right-0 z-[100] flex min-w-full translate-y-[calc(100%+10px)] flex-col items-stretch rounded border border-gray-300 bg-white py-2 shadow">
           {label && (
             <span className="px-4 py-2 text-sm font-medium text-gray-700">
               {label.toUpperCase()}
